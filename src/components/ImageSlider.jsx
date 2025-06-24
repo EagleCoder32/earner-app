@@ -29,7 +29,9 @@ export default function ImageSlider({ images }) {
           <div key={idx} className="flex-shrink-0 w-1/3 text-center">
             <Image
               src={src}
+              fill
               alt={caption}
+
               className="w-auto h-auto object-contain rounded-lg mx-auto"
             />
             <p className="mt-2 text-gray-700 text-sm">{caption}</p>

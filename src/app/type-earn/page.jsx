@@ -6,6 +6,19 @@ import Image from 'next/image';
 
 
 export default function TypeAndEarnPage() {
+
+  // 0) On fresh load, if we're *not* coming back from a completed claim,
+//    clear any old sessionId so we get a brand-new chain when they click Start.
+useEffect(() => {
+  const params = new URLSearchParams(window.location.search);
+  if (!params.get("earned")) {
+    localStorage.removeItem("typeEarnSession");
+  }
+}, []);
+
+
+
+
   const params = useSearchParams();
   const router = useRouter();
 
@@ -45,7 +58,7 @@ window.open(
   return (
     <div className="page-container">
       <div className="content-wrapper">
-        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" />
+        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={34} height={34} />
         <button className="start-button" onClick={handleStart}>
           Start Type and Earn
         </button>

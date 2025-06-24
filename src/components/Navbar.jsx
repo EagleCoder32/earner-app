@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <nav className="absolute top-0 left-0 right-0 flex items-center justify-between p-6 z-50">
       <Link href="/">
-        <Image src="/eagle earner.png" alt="EagleEarner Logo" className="h-10 w-auto" />
+        <Image src="/eagle earner.png" alt="EagleEarner Logo" height={10} width={10} />
       </Link>
 
       <div className="flex items-center space-x-3">
