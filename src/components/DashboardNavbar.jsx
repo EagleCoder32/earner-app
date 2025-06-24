@@ -28,10 +28,10 @@ export default function DashboardNavbar() {
       {menuOpen && (
         <div className="absolute top-12 left-0 w-56 bg-[#2a2a2a] h-screen p-4 z-50">
           <ul className="space-y-4">
-            <li><a href="#" className="hover:text-yellow-400">Home</a></li>
-            <li><a href="/withdrawal" className="hover:text-yellow-400">Withdrawal</a></li>
-            <li><a href="/profile" className="hover:text-yellow-400">Profile</a></li>
-            {/* Add more links as needed */}
+              <Link href="#" className="hover:text-yellow-400">Dashboard</Link>
+            <Link href="/withdrawal/" className="hover:text-yellow-400">Withdraw</Link>
+            <Link href="/wallet" className="hover:text-yellow-400">Wallet</Link>
+            
           </ul>
         </div>
       )}

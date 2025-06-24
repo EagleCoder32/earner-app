@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 import { withdrawalItems } from './withdrawalItems';
 import { countryConfig } from './withdrawalData';
@@ -44,7 +45,7 @@ export default function WithdrawalPage() {
     href="/dashboard"
     className="mr-4 p-2 hover:bg-gray-200 dark:hover:bg-gray-700 rounded transition inline-flex"
   >
-    <img
+    <Image
       src="/left-arrow.svg"
       alt="Back to Dashboard"
       className="h-6 w-6"
@@ -88,7 +89,7 @@ export default function WithdrawalPage() {
                   className="flex items-center py-2 border-b border-gray-200 cursor-pointer hover:bg-gray-100"
                 >
                   {/* Flag from SVG */}
-                  <img
+                  <Image
                     src={`/flags/${c.toLowerCase().replace(/\s+/g, '-')}.svg`}
                     alt={`${c} flag`}
                     className="w-6 h-4 mr-3 object-cover rounded-sm"
@@ -119,7 +120,7 @@ export default function WithdrawalPage() {
                       key={key}
                       className="w-full bg-white dark:bg-gray-800 shadow rounded-2xl p-6 flex flex-col items-center hover:shadow-md transition"
                     >
-                      <img
+                      <Image
                         src={item.icon}
                         alt={item.name}
                         className="w-16 h-16 mb-3 object-contain"

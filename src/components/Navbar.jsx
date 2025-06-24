@@ -1,13 +1,16 @@
 'use client';
 
 import {SignInButton,SignUpButton} from '@clerk/nextjs';
+import Image from 'next/image';
+import Link from 'next/link';
+
 
 export default function Navbar() {
   return (
     <nav className="absolute top-0 left-0 right-0 flex items-center justify-between p-6 z-50">
-      <a href="/">
-        <img src="/eagle earner.png" alt="EagleEarner Logo" className="h-10 w-auto" />
-      </a>
+      <Link href="/">
+        <Image src="/eagle earner.png" alt="EagleEarner Logo" className="h-10 w-auto" />
+      </Link>
 
       <div className="flex items-center space-x-3">
           <SignInButton mode="modal">

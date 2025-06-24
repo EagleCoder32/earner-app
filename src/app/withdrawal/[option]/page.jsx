@@ -6,17 +6,19 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { withdrawalItems } from '../withdrawalItems';
 import { withdrawalTiers } from '../withdrawalTiers';
+import Image from 'next/image';
+
 
 export default function OptionPage() {
   const { option } = useParams();
   const item = withdrawalItems[option];
   const tiers = withdrawalTiers[option] || [];
 
-  const [selectedTier, setSelectedTier]     = useState(null);
-  const [showForm, setShowForm]             = useState(false);
-  const [formName, setFormName]             = useState('');
-  const [nameError, setNameError]           = useState('');
-  const [formEmail, setFormEmail]           = useState('');
+  const [selectedTier, setSelectedTier] = useState(null);
+  const [showForm, setShowForm] = useState(false);
+  const [formName, setFormName] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [formEmail, setFormEmail] = useState('');
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   useEffect(() => {
@@ -30,7 +32,7 @@ export default function OptionPage() {
     return (
       <div className="max-w-screen-md mx-auto p-6 text-center">
         <h1 className="text-2xl font-bold mb-4">Option Not Found</h1>
-        <p>The withdrawal option "{option}" does not exist.</p>
+        <p>The withdrawal option &quot;{option}&quot; does not exist.</p>
       </div>
     );
   }
@@ -57,10 +59,10 @@ export default function OptionPage() {
     const country = localStorage.getItem('withdrawalCountry') || '';
     try {
       const res = await fetch('/api/withdrawal/request', {
-        method:      'POST',
+        method: 'POST',
         credentials: 'same-origin',
-        headers:     { 'Content-Type': 'application/json' },
-        body:        JSON.stringify({
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           option,
           tierValue: selectedTier.value,
           tierLabel: selectedTier.label,
@@ -88,7 +90,7 @@ export default function OptionPage() {
         <Link href="/withdrawal">
           <span className="mr-4 cursor-pointer text-blue-500">← Back</span>
         </Link>
-        <img src={item.icon} alt={item.name} className="w-12 h-12 mr-4" />
+        <Image src={item.icon} alt={item.name} className="w-12 h-12 mr-4" />
         <h1 className="text-3xl font-bold">{item.name}</h1>
       </div>
 

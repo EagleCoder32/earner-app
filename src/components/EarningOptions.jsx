@@ -2,10 +2,11 @@
 
 import Link from 'next/link';
 import { ChevronRightIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 export default function EarningOptions() {
   const options = [
-    
+
     {
       href: '/type-earn',
       iconUrl: 'Do Captcha and Earn.webp',
@@ -21,11 +22,11 @@ export default function EarningOptions() {
       description: 'Read short articles to earn',
       gradient: 'bg-gradient-to-r from-[#0d2cce82] to-[#0018ff]',
     },
- 
+
   ];
 
   return (
-<div style={{ marginTop: "-75px" }} className="grid grid-cols-1 sm:grid-cols-2 gap-12">
+    <div style={{ marginTop: "-75px" }} className="grid grid-cols-1 sm:grid-cols-2 gap-12">
       {options.map(({ href, iconUrl, title, description, gradient }) => (
         <Link
           key={href}
@@ -34,9 +35,11 @@ export default function EarningOptions() {
         >
           {/* Gradient header with centered image */}
           <div className={`${gradient} h-24 flex justify-center items-center`}>
-            <img
-              src={iconUrl}
+            <Image
+                src="/earner-eagle.webp" //
               alt={title}
+              width={80} // Add fixed width
+              height={80}
               className="w-20 h-20 object-cover rounded-full border-2 border-black"
             />
           </div>

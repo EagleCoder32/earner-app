@@ -2,6 +2,8 @@
 
 import React, { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from 'next/image';
+
 
 export default function TypeAndEarnPage() {
   const params = useSearchParams();
@@ -43,7 +45,7 @@ window.open(
   return (
     <div className="page-container">
       <div className="content-wrapper">
-        <img src="/typing.svg" alt="Typing Icon" className="icon-svg" />
+        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" />
         <button className="start-button" onClick={handleStart}>
           Start Type and Earn
         </button>

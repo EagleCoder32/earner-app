@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function ImageSlider({ images }) {
   const visibleCount = 3;         // how many images to show at once
@@ -26,7 +27,7 @@ export default function ImageSlider({ images }) {
            style={{ transform: `translateX(-${(100 / visibleCount) * currentIdx}%)` }}>
         {images.map(({ src, caption }, idx) => (
           <div key={idx} className="flex-shrink-0 w-1/3 text-center">
-            <img
+            <Image
               src={src}
               alt={caption}
               className="w-auto h-auto object-contain rounded-lg mx-auto"

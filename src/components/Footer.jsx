@@ -1,4 +1,6 @@
 import { Facebook, Instagram, Youtube } from "lucide-react";
+import Image from 'next/image';
+
 
 export default function Footer() {
   return (
@@ -6,9 +8,11 @@ export default function Footer() {
       <div className="container mx-auto px-6 py-8 text-center space-y-6 mt-40">
         {/* Branding */}
         <div className="flex justify-center">
-          <img
-            src="/eagle earner.png"
+          <Image
+            src="/earner-eagle.webp"
             alt="Eagle Earner"
+            width={80} 
+            height={80}
             className="h-14 w-auto"
           />
         </div>
