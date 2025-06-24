@@ -1,0 +1,8 @@
+{
+  "root": true,
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    // you can add any custom rules here, for example:
+    // "react/react-in-jsx-scope": "off"
+  }
+}
