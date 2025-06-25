@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+// src/app/read-earn/complete/page.jsx
 'use client';
 
 import { useEffect, useState } from 'react';
