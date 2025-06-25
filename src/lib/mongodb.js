@@ -13,16 +13,21 @@ export async function connectToDatabase() {
   }
 
   if (!cached.promise) {
-    // 1) Grab the raw URI
+    // 1) Grab your raw ENV var
     let uri = process.env.MONGODB_URI || '';
 
-    // 2) Remove any leading/trailing single or double quotes
-    uri = uri.replace(/^['"]|['"]$/g, '');
+    // 2) Remove any stray quotes anywhere in the string
+    uri = uri.replace(/['"]/g, '');
 
-    // 3) Kick off the connection
+    // 3) (Optional) log it once to verify
+    console.log('🔗 connecting to MongoDB with URI:', uri);
+
+    // 4) Connect, forcing a proper writeConcern
     cached.promise = mongoose
       .connect(uri, {
-        // you can add mongoose options here if needed
+        // ensure a valid writeConcern
+        writeConcern: { w: 'majority' },
+        // other options you may have...
       })
       .then((mongoose) => mongoose);
   }
