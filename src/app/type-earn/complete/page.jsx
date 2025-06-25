@@ -1,21 +1,24 @@
 'use client';
+
 import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 export default function CompletePage() {
   const [message, setMessage] = useState('Checking…');
+  const [loading, setLoading] = useState(true);
   const sp     = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
-    // 1) First, grab sessionId from the URL if present, else from localStorage:
+    // 1) Grab sessionId (prefer URL, fallback to localStorage)
     const sidFromUrl = sp.get('sessionId');
     const sessionId  = sidFromUrl || localStorage.getItem('typeEarnSession') || '';
-    // 2) Grab the set number:
+    // 2) Grab the set number
     const setNum     = parseInt(sp.get('set') || '', 10);
 
     if (!sessionId || isNaN(setNum)) {
       setMessage('❌ Invalid session or set.');
+      setLoading(false);
       return;
     }
 
@@ -29,32 +32,30 @@ export default function CompletePage() {
     .then(async res => {
       const data = await res.json();
       if (res.ok) {
-        // Award successful → clear stored ID so they can start fresh next time
+        // Award successful → clear stored ID so they can start a fresh chain next time
         localStorage.removeItem('typeEarnSession');
         setMessage(`🎉 You got 5 points! Total: ${data.totalPoints}.`);
       } else {
         setMessage(`❌ ${data.error}`);
       }
-      // After 3s, send them back to the start
-      setTimeout(() => {
-        router.replace('/type-earn', { scroll: false });
-      }, 3000);
     })
     .catch(() => {
       setMessage('❌ Network error.');
-      // still clean up after a moment
-      setTimeout(() => {
-        router.replace('/type-earn', { scroll: false });
-      }, 3000);
+    })
+    .finally(() => {
+      setLoading(false);
     });
-  }, [sp, router]);
+  }, [sp]);
 
   return (
     <div className="container">
-      <h1>{message}</h1>
-      <button onClick={() => router.replace('/type-earn')}>
-        Type Again
-      </button>
+      <h1>{loading ? 'Processing…' : message}</h1>
+      {/* Now the user must click this to start again */}
+      {!loading && (
+        <button onClick={() => router.replace('/type-earn')}>
+          Type Again
+        </button>
+      )}
       <style jsx>{`
         .container {
           display: flex;
