@@ -1,79 +1,61 @@
 // src/app/api/type-earn/verify/route.js
-import { NextResponse }      from 'next/server';
-import { getAuth }           from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import { getAuth }     from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import User                  from '@/models/User';
-import TypeProgress          from '@/models/TypeProgress';
+import User            from '@/models/User';
+import TypeProgress    from '@/models/TypeProgress';
+
+export async function GET() {
+  // A simple health check
+  return NextResponse.json({ status: 'OK', route: '/api/type-earn/verify' });
+}
 
 export async function POST(req) {
+  console.log('🟢 [type-earn/verify] POST hit');
   try {
-    // 1) Authenticate via Clerk — pass the Request directly!
     const { userId } = getAuth(req);
     if (!userId) {
-      console.warn('🔒 Unauthenticated request to /api/type-earn/verify');
+      console.warn('🔒 Unauthenticated request');
       return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 });
     }
 
-    // 2) Parse & validate body
     const { sessionId, setNumber } = await req.json();
+    console.log('📥 Payload:', { sessionId, setNumber });
+
     if (!sessionId || typeof setNumber !== 'number') {
-      console.warn('⚠️ Invalid payload to /api/type-earn/verify:', {
-        sessionId,
-        setNumber,
-      });
+      console.warn('⚠️ Invalid payload');
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
 
-    // 3) Connect to MongoDB
     await connectToDatabase();
+    console.log('🗄️ Connected to DB');
 
-    // 4) Prevent duplicate redemption for the same session+set
-    const already = await TypeProgress.findOne({
-      clerkId:   userId,
-      sessionId,
-      setNumber,
-    });
+    const already = await TypeProgress.findOne({ clerkId: userId, sessionId, setNumber });
     if (already) {
-      console.info(
-        `🚫 Duplicate claim attempt by ${userId} for session=${sessionId}, set=${setNumber}`
-      );
+      console.info('🚫 Duplicate claim');
       return NextResponse.json(
-        { error: 'You’ve already claimed points for this typing set.' },
+        { error: 'Already claimed points for this set.' },
         { status: 400 }
       );
     }
 
-    // 5) Record the completion
     const POINTS_PER_SET = 5;
-    await TypeProgress.create({
-      clerkId:   userId,
-      sessionId,
-      setNumber,
-      points:    POINTS_PER_SET,
-    });
+    await TypeProgress.create({ clerkId: userId, sessionId, setNumber, points: POINTS_PER_SET });
+    console.log('✅ Recorded TypeProgress');
 
-    // 6) Award the user in their profile
     let user = await User.findOne({ clerkId: userId });
-    if (!user) {
-      user = await User.create({ clerkId: userId, points: 0 });
-    }
+    if (!user) user = await User.create({ clerkId: userId, points: 0 });
     user.points += POINTS_PER_SET;
     await user.save();
+    console.log('💾 User points updated to', user.points);
 
-    // 7) Return success
     return NextResponse.json({
       message:     `${POINTS_PER_SET} points awarded!`,
-      totalPoints: user.points,
+      totalPoints: user.points
     });
-  } catch (err) {
-    // Log the full error and stack trace
-    console.error('🔥 Error in /api/type-earn/verify:', err);
-    console.error(err.stack);
 
-    // Return a generic error to the client
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+  } catch (err) {
+    console.error('🔥 Error in /api/type-earn/verify:', err);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
