@@ -15,10 +15,12 @@ function shuffleArray(arr) {
 }
 
 export default function ReadEarnPage() {
-  const [today, setToday]         = useState('');      // inferred string
-  const [currentIndex, setCurrentIndex] = useState(null); // inferred null | number
+  const [today, setToday] = useState('');
+  // currentIndex will be either null (while loading) or a number
+  const [currentIndex, setCurrentIndex] = useState(null);
   const [limitReached, setLimitReached] = useState(false);
-  const [shuffled, setShuffled]   = useState([]); 
+  // shuffled is an array of strings
+  const [shuffled, setShuffled] = useState([]);
 
   // ── 1) On mount: compute “today” and reset if needed ───────────────
   useEffect(() => {
