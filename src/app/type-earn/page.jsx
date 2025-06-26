@@ -47,12 +47,10 @@ useEffect(() => {
 const sessionId = crypto.randomUUID();
 localStorage.setItem('typeEarnSession', sessionId);
 
-// 2) Then open the WP typing flow
-window.open(
-  `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`,
-  "_blank",
-  "noopener,noreferrer"
-);
+  // 2) Navigate in the same tab instead
+  window.location.href = 
+   `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`;
+    "noopener,noreferrer"
   }
 
   return (
