@@ -15,48 +15,49 @@ function shuffleArray(arr) {
 
 export default function ReadEarnPage() {
   const [today, setToday]             = useState('');
-  const [remaining, setRemaining]     = useState([]);  // list of URLs still to read
+  const [remaining, setRemaining]     = useState([]);  
   const [limitReached, setLimitReached] = useState(false);
 
-  // On mount: reset daily and prepare remaining[]
+  // On mount: reset for a new day, otherwise rehydrate
   useEffect(() => {
     const isoNow = new Date().toISOString().split('T')[0];
     setToday(isoNow);
 
     const storedDate = localStorage.getItem('lastReadDate');
     if (storedDate !== isoNow) {
-      // new day → start fresh
+      // New day → fresh shuffle
       localStorage.setItem('lastReadDate', isoNow);
       const fresh = shuffleArray(articleList);
       localStorage.setItem('remainingArticles', JSON.stringify(fresh));
       setRemaining(fresh);
     } else {
-      // same day → rehydrate remaining or start if missing
+      // Same day → rehydrate what’s left
       const raw = localStorage.getItem('remainingArticles');
-      let arr = null;
-      try { arr = JSON.parse(raw); } catch {}
-      if (!Array.isArray(arr) || arr.length === 0) {
+      let arr;
+      try {
+        arr = JSON.parse(raw);
+      } catch {
+        arr = null;
+      }
+      // If nothing stored at all, shuffle once; *but if stored [] (finished), keep it empty!*
+      if (!Array.isArray(arr)) {
         arr = shuffleArray(articleList);
+        localStorage.setItem('remainingArticles', JSON.stringify(arr));
       }
       setRemaining(arr);
     }
   }, []);
 
-  // Whenever remaining changes, check if empty
+  // Persist & detect “done”
   useEffect(() => {
-    setLimitReached(remaining.length === 0);
-    // keep in storage
     localStorage.setItem('remainingArticles', JSON.stringify(remaining));
+    setLimitReached(remaining.length === 0);
   }, [remaining]);
 
   function handleReadEarnClick() {
     if (limitReached) return;
-
-    // take the first URL off our remaining list
     const [nextUrl, ...rest] = remaining;
     setRemaining(rest);
-
-    // redirect
     window.location.href = nextUrl;
   }
 
@@ -73,7 +74,9 @@ export default function ReadEarnPage() {
             <div className="progress-bar">
               <div
                 className="progress-filled"
-                style={{ width: `${((articleList.length - remaining.length) / articleList.length) * 100}%` }}
+                style={{
+                  width: `${((articleList.length - remaining.length) / articleList.length) * 100}%`
+                }}
               />
             </div>
             <p className="progress-text">
