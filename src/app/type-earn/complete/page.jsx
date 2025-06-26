@@ -14,7 +14,7 @@ export default function CompletePage() {
     const sidFromUrl = sp.get('sessionId');
     const sessionId  = sidFromUrl || localStorage.getItem('typeEarnSession') || '';
     // 2) Grab the set number
-    const setNum     = parseInt(sp.get('set') || '', 6);
+    const setNum     = parseInt(sp.get('set') || '', 10);
 
     if (!sessionId || isNaN(setNum)) {
       setMessage('❌ Invalid session or set.');
