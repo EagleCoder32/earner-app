@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import articleList from '../articleList';
 
-// ── Helpers ──────────────────────────────────────────────────────────
 // Fisher–Yates shuffle
 function shuffleArray(arr) {
   const a = [...arr];
@@ -15,64 +14,52 @@ function shuffleArray(arr) {
 }
 
 export default function ReadEarnPage() {
-  const [today, setToday] = useState('');
-  // currentIndex will be either null (while loading) or a number
-  const [currentIndex, setCurrentIndex] = useState(null);
+  const [today, setToday]             = useState('');
+  const [remaining, setRemaining]     = useState([]);  // list of URLs still to read
   const [limitReached, setLimitReached] = useState(false);
-  // shuffled is an array of strings
-  const [shuffled, setShuffled] = useState([]);
 
-  // ── 1) On mount: compute “today” and reset if needed ───────────────
+  // On mount: reset daily and prepare remaining[]
   useEffect(() => {
     const isoNow = new Date().toISOString().split('T')[0];
     setToday(isoNow);
 
     const storedDate = localStorage.getItem('lastReadDate');
     if (storedDate !== isoNow) {
-      // New day: reset index & shuffle
+      // new day → start fresh
       localStorage.setItem('lastReadDate', isoNow);
-      localStorage.setItem('nextArticleIndex', '0');
-
-      const newShuffle = shuffleArray(articleList);
-      localStorage.setItem('shuffledArticles', JSON.stringify(newShuffle));
-      setShuffled(newShuffle);
-
-      setCurrentIndex(0);
+      const fresh = shuffleArray(articleList);
+      localStorage.setItem('remainingArticles', JSON.stringify(fresh));
+      setRemaining(fresh);
     } else {
-      // Same day: rehydrate shuffle or regenerate if missing
-      const saved = JSON.parse(localStorage.getItem('shuffledArticles') || 'null');
-      const arr = Array.isArray(saved) ? saved : shuffleArray(articleList);
-      localStorage.setItem('shuffledArticles', JSON.stringify(arr));
-      setShuffled(arr);
-
-      const idx = parseInt(localStorage.getItem('nextArticleIndex') || '0', 10);
-      setCurrentIndex(idx);
+      // same day → rehydrate remaining or start if missing
+      const raw = localStorage.getItem('remainingArticles');
+      let arr = null;
+      try { arr = JSON.parse(raw); } catch {}
+      if (!Array.isArray(arr) || arr.length === 0) {
+        arr = shuffleArray(articleList);
+      }
+      setRemaining(arr);
     }
   }, []);
 
-  // ── 2) Once we have an index & shuffle, check if we're done ─────────
+  // Whenever remaining changes, check if empty
   useEffect(() => {
-    if (currentIndex === null) return;
-    setLimitReached(currentIndex >= shuffled.length);
-  }, [currentIndex, shuffled]);
+    setLimitReached(remaining.length === 0);
+    // keep in storage
+    localStorage.setItem('remainingArticles', JSON.stringify(remaining));
+  }, [remaining]);
 
-  // ── 3) Button handler ─────────────────────────────────────────────
   function handleReadEarnClick() {
-    if (limitReached || currentIndex === null) return;
+    if (limitReached) return;
 
-    // Grab the URL at our shuffled index
-    const url = shuffled[currentIndex];
+    // take the first URL off our remaining list
+    const [nextUrl, ...rest] = remaining;
+    setRemaining(rest);
 
-    // Bump for next time
-    const next = currentIndex + 1;
-    localStorage.setItem('nextArticleIndex', String(next));
-    setCurrentIndex(next);
-
-    // Finally redirect
-    window.location.href = url;
+    // redirect
+    window.location.href = nextUrl;
   }
 
-  // ── 4) Render ─────────────────────────────────────────────────────
   return (
     <div className="page">
       <div className="card">
@@ -81,18 +68,16 @@ export default function ReadEarnPage() {
 
         {limitReached ? (
           <p className="limit">You’ve completed all articles today!</p>
-        ) : currentIndex === null ? (
-          <p>Loading…</p>
         ) : (
           <>
             <div className="progress-bar">
               <div
                 className="progress-filled"
-                style={{ width: `${(currentIndex / shuffled.length) * 100}%` }}
+                style={{ width: `${((articleList.length - remaining.length) / articleList.length) * 100}%` }}
               />
             </div>
             <p className="progress-text">
-              {currentIndex} / {shuffled.length} articles read
+              {articleList.length - remaining.length} / {articleList.length} articles read
             </p>
             <button className="cta-button" onClick={handleReadEarnClick}>
               Read Next &amp; Earn
@@ -121,22 +106,12 @@ export default function ReadEarnPage() {
           color: #fff;
           box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
-        h1 {
-          margin: 0 0 0.5rem;
-          font-size: 2rem;
-        }
-        .date {
-          margin-bottom: 1.5rem;
-          font-size: 0.9rem;
-          opacity: 0.8;
-        }
-        .limit {
-          font-size: 1.1rem;
-          color: #ffd700;
-        }
+        h1 { margin: 0 0 .5rem; font-size: 2rem; }
+        .date { margin-bottom: 1.5rem; font-size: .9rem; opacity: .8; }
+        .limit { font-size: 1.1rem; color: #ffd700; }
         .progress-bar {
           height: 8px;
-          background: rgba(255, 255, 255, 0.3);
+          background: rgba(255,255,255,.3);
           border-radius: 4px;
           margin: 1rem 0;
           overflow: hidden;
@@ -144,27 +119,24 @@ export default function ReadEarnPage() {
         .progress-filled {
           height: 100%;
           background: #ff7df0;
-          transition: width 0.3s ease;
+          transition: width .3s ease;
         }
-        .progress-text {
-          margin-bottom: 1.5rem;
-          font-size: 1rem;
-        }
+        .progress-text { margin-bottom: 1.5rem; font-size: 1rem; }
         .cta-button {
           background: linear-gradient(135deg, #ee1bd6 0%, #d900ff 100%);
           border: none;
           border-radius: 8px;
-          padding: 0.75rem 1.5rem;
+          padding: .75rem 1.5rem;
           font-size: 1rem;
           font-weight: 600;
           color: #fff;
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+          transition: transform .2s, box-shadow .2s;
+          box-shadow: 0 4px 16px rgba(0,0,0,.4);
         }
         .cta-button:hover {
           transform: translateY(-3px);
-          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+          box-shadow: 0 6px 24px rgba(0,0,0,.6);
         }
       `}</style>
     </div>
