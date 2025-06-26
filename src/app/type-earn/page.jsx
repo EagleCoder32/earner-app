@@ -32,7 +32,7 @@ useEffect(() => {
       console.log(`User earned ${earned} points`);
 
       // 3) Optionally store locally
-      const prev = parseInt(localStorage.getItem("typeEarnPoints") || "0", 10);
+      const prev = parseInt(localStorage.getItem("typeEarnPoints") || "0", 6);
       localStorage.setItem("typeEarnPoints", prev + Number(earned));
 
       // 4) Clean the URL after 3s so you can re‑earn later
