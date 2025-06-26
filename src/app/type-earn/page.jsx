@@ -55,6 +55,16 @@ localStorage.setItem('typeEarnSession', sessionId);
 
   return (
     <div className="page-container">
+
+      {/* ◀︎ Back button */}
+      <button
+        className="back-button"
+        onClick={() => router.push('/dashboard')}
+        aria-label="Back to dashboard"
+      >
+        ← Back
+      </button>
+
       <div className="content-wrapper">
         <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={34} height={34} />
         <button className="start-button" onClick={handleStart}>
@@ -111,6 +121,19 @@ localStorage.setItem('typeEarnSession', sessionId);
           transform: translateY(-3px);
           box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
         }
+
+       .back-button {
+          position: absolute;
+          top: 1rem;
+          left: 1rem;
+          background: transparent;
+          border: none;
+          color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 0.25rem 0.5rem;
+        }
+
       `}</style>
     </div>
   );

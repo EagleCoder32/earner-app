@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import articleList from '../articleList';
 
 // Fisher–Yates shuffle
@@ -14,6 +15,7 @@ function shuffleArray(arr) {
 }
 
 export default function ReadEarnPage() {
+  const router = useRouter();
   const [today, setToday]             = useState('');
   const [remaining, setRemaining]     = useState([]);  
   const [limitReached, setLimitReached] = useState(false);
@@ -63,6 +65,17 @@ export default function ReadEarnPage() {
 
   return (
     <div className="page">
+
+          {/* ← Back button */}
+      <button
+        className="back-button"
+        onClick={() => router.push('/dashboard')}
+        aria-label="Back to dashboard"
+      >
+        ← Back
+      </button>
+
+
       <div className="card">
         <h1>Read &amp; Earn</h1>
         <p className="date">📅 {today}</p>
@@ -98,6 +111,21 @@ export default function ReadEarnPage() {
           background: linear-gradient(135deg, #3c1053 0%, #6e1b80 100%);
           padding: 1rem;
         }
+
+         .back-button {
+          position: absolute;
+          top: 1rem;
+          left: 1rem;
+          background: transparent;
+          border: none;
+          color: #fff;
+          font-size: 1rem;
+          cursor: pointer;
+          padding: 0.25rem 0.5rem;
+        }
+
+
+
         .card {
           background: rgba(255, 255, 255, 0.1);
           backdrop-filter: blur(12px);
