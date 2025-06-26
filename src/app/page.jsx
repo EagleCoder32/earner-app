@@ -35,7 +35,7 @@ export default async function HomePage() {
         {/* ==== Hero ==== */}
         <section className="relative overflow-hidden">
           <div className="bg-gradient-to-br from-purple-600 to-indigo-600 pt-20 pb-32">
-            <div className="container mx-auto px-6 lg:px-20 text-center mt-7">
+            <div className="container mx-auto px-6 lg:px-20 text-center mt-12">
               <h1 className="text-4xl md:text-5xl font-extrabold text-white">
                 Earn Cash, Gift Cards &amp; Games Currency
               </h1>
