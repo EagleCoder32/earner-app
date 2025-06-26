@@ -1,47 +1,76 @@
-// src/app/read-earn/page.jsx
 'use client';
 
 import { useEffect, useState } from 'react';
 import articleList from '../articleList';
 
-export default function ReadEarnPage() {
-  const [today, setToday] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(null);
-  const [limitReached, setLimitReached] = useState(false);
+// ── Helpers ──────────────────────────────────────────────────────────
+// Fisher–Yates shuffle
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
 
-  // Initialize date and index
+export default function ReadEarnPage() {
+  const [today, setToday]         = useState('');      // inferred string
+  const [currentIndex, setCurrentIndex] = useState(null); // inferred null | number
+  const [limitReached, setLimitReached] = useState(false);
+  const [shuffled, setShuffled]   = useState([]); 
+
+  // ── 1) On mount: compute “today” and reset if needed ───────────────
   useEffect(() => {
     const isoNow = new Date().toISOString().split('T')[0];
     setToday(isoNow);
 
     const storedDate = localStorage.getItem('lastReadDate');
     if (storedDate !== isoNow) {
+      // New day: reset index & shuffle
       localStorage.setItem('lastReadDate', isoNow);
       localStorage.setItem('nextArticleIndex', '0');
+
+      const newShuffle = shuffleArray(articleList);
+      localStorage.setItem('shuffledArticles', JSON.stringify(newShuffle));
+      setShuffled(newShuffle);
+
       setCurrentIndex(0);
     } else {
-      const saved = parseInt(localStorage.getItem('nextArticleIndex') || '0', 10);
-      setCurrentIndex(saved);
+      // Same day: rehydrate shuffle or regenerate if missing
+      const saved = JSON.parse(localStorage.getItem('shuffledArticles') || 'null');
+      const arr = Array.isArray(saved) ? saved : shuffleArray(articleList);
+      localStorage.setItem('shuffledArticles', JSON.stringify(arr));
+      setShuffled(arr);
+
+      const idx = parseInt(localStorage.getItem('nextArticleIndex') || '0', 10);
+      setCurrentIndex(idx);
     }
   }, []);
 
-  // Check if we've read all articles
+  // ── 2) Once we have an index & shuffle, check if we're done ─────────
   useEffect(() => {
     if (currentIndex === null) return;
-    setLimitReached(currentIndex >= articleList.length);
-  }, [currentIndex]);
+    setLimitReached(currentIndex >= shuffled.length);
+  }, [currentIndex, shuffled]);
 
-  // Handle click
+  // ── 3) Button handler ─────────────────────────────────────────────
   function handleReadEarnClick() {
     if (limitReached || currentIndex === null) return;
 
+    // Grab the URL at our shuffled index
+    const url = shuffled[currentIndex];
+
+    // Bump for next time
     const next = currentIndex + 1;
     localStorage.setItem('nextArticleIndex', String(next));
     setCurrentIndex(next);
 
-    window.location.href = articleList[currentIndex];
+    // Finally redirect
+    window.location.href = url;
   }
 
+  // ── 4) Render ─────────────────────────────────────────────────────
   return (
     <div className="page">
       <div className="card">
@@ -57,11 +86,11 @@ export default function ReadEarnPage() {
             <div className="progress-bar">
               <div
                 className="progress-filled"
-                style={{ width: `${(currentIndex / articleList.length) * 100}%` }}
+                style={{ width: `${(currentIndex / shuffled.length) * 100}%` }}
               />
             </div>
             <p className="progress-text">
-              {currentIndex} / {articleList.length} articles read
+              {currentIndex} / {shuffled.length} articles read
             </p>
             <button className="cta-button" onClick={handleReadEarnClick}>
               Read Next &amp; Earn
