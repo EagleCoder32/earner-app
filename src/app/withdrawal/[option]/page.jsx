@@ -90,7 +90,7 @@ export default function OptionPage() {
         <Link href="/withdrawal">
           <span className="mr-4 cursor-pointer text-blue-500">← Back</span>
         </Link>
-        <Image src={item.icon} alt={item.name} className="w-12 h-12 mr-4" />
+        <Image src={item.icon} alt={item.name} width={12} height={12} className="w-12 h-12 mr-4" />
         <h1 className="text-3xl font-bold">{item.name}</h1>
       </div>
 

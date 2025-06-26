@@ -48,7 +48,9 @@ export default function WithdrawalPage() {
     <Image
       src="/left-arrow.svg"
       alt="Back to Dashboard"
-      className="h-6 w-6"
+      width={17}
+      height={17}
+      
     />
   </Link>
       <h1 className="text-2xl font-bold">Withdrawal</h1>
@@ -92,7 +94,9 @@ export default function WithdrawalPage() {
                   <Image
                     src={`/flags/${c.toLowerCase().replace(/\s+/g, '-')}.svg`}
                     alt={`${c} flag`}
-                    className="w-6 h-4 mr-3 object-cover rounded-sm"
+                    width={16}
+                    height={16}
+                    className="mr-3 object-cover rounded-sm"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
                   <span>{c}</span>
@@ -123,7 +127,9 @@ export default function WithdrawalPage() {
                       <Image
                         src={item.icon}
                         alt={item.name}
-                        className="w-16 h-16 mb-3 object-contain"
+                        width={50}
+                        height={50}
+                        className="mb-3 object-contain"
                       />
                 <span className="mt-auto text-white font-bold text-center">
                         {item.name}
