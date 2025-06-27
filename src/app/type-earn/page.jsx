@@ -108,7 +108,7 @@ localStorage.setItem('typeEarnSession', sessionId);
           width: 100%;
           background: linear-gradient(135deg, #1eec06f2 0%, #1eec06f2 100%);
           color: #000000f2;  
-          font-size: 1.2rem;
+          font-size: 1.25rem;
           font-weight: 600;
           padding: 0.75rem 1.5rem;
           border: none;
@@ -129,9 +129,10 @@ localStorage.setItem('typeEarnSession', sessionId);
           background: transparent;
           border: none;
           color: #fff;
-          font-size: 1rem;
+          font-size: 30px;
           cursor: pointer;
           padding: 0.25rem 0.5rem;
+          font-weight: 700;
         }
 
       `}</style>
