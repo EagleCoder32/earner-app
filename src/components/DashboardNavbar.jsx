@@ -22,26 +22,26 @@ export default function DashboardNavbar() {
         <Wallet size={24} />
       </Link>
 
-      {/* Sidebar */}
-      {menuOpen && (
-        <div className="absolute top-full left-0 w-full bg-[#2a2a2a] p-4 z-50">
-          <ul className="flex flex-row justify-around">
-            <li>
-              <Link href="/" className="hover:text-yellow-400">
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link href="/withdrawal" className="hover:text-yellow-400">
-                Withdraw
-              </Link>
-            </li>
-            <li>
-              <Link href="/wallet" className="hover:text-yellow-400">
-                Wallet
-              </Link>
-            </li>
-          </ul>
+{/* Sidebar */}
+{menuOpen && (
+  <div className="absolute top-full left-0 w-full bg-[#2a2a2a] p-4 z-50">
+    <ul className="flex flex-col space-y-3">
+      <li>
+        <Link href="/" className="hover:text-yellow-400 block">
+          Dashboard
+        </Link>
+      </li>
+      <li>
+        <Link href="/withdrawal" className="hover:text-yellow-400 block">
+          Withdraw
+        </Link>
+      </li>
+      <li>
+        <Link href="/wallet" className="hover:text-yellow-400 block">
+          Wallet
+        </Link>
+      </li>
+    </ul>
         </div>
       )}
     </nav>
