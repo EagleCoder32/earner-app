@@ -25,7 +25,7 @@ export default function DashboardNavbar() {
 {/* Sidebar */}
 {menuOpen && (
   <div className="absolute top-full left-0 w-full bg-[#2a2a2a] p-4 z-50">
-    <ul className="flex flex-col space-y-3">
+    <ul className="flex flex-col space-y-7">
       <li>
         <Link href="/" className="hover:text-yellow-400 block">
           Dashboard
