@@ -10,13 +10,13 @@ import { ArrowLeft } from 'lucide-react';
 export default function TypeAndEarnPage() {
 
   // 0) On fresh load, if we're *not* coming back from a completed claim,
-//    clear any old sessionId so we get a brand-new chain when they click Start.
-useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  if (!params.get("earned")) {
-    localStorage.removeItem("typeEarnSession");
-  }
-}, []);
+  //    clear any old sessionId so we get a brand-new chain when they click Start.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get("earned")) {
+      localStorage.removeItem("typeEarnSession");
+    }
+  }, []);
 
 
 
@@ -45,21 +45,21 @@ useEffect(() => {
   }, [params, router]);
 
   const handleStart = () => {
- // 1) Create a fresh sessionId for this typing chain
-const sessionId = crypto.randomUUID();
-localStorage.setItem('typeEarnSession', sessionId);
+    // 1) Create a fresh sessionId for this typing chain
+    const sessionId = crypto.randomUUID();
+    localStorage.setItem('typeEarnSession', sessionId);
 
-  // 2) Navigate in the same tab instead
-  window.location.href = 
-   `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`;
+    // 2) Navigate in the same tab instead
+    window.location.href =
+      `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`;
     "noopener,noreferrer"
   }
 
   return (
     <div className="page-container">
 
-  
-        {/* Back button */}
+
+      {/* Back button */}
       <button
         onClick={() => router.push('/dashboard')}
         aria-label="Back to dashboard"
@@ -84,12 +84,8 @@ localStorage.setItem('typeEarnSession', sessionId);
           align-items: center;
           width: 100vw;
           min-height: 100vh;
-          background: linear-gradient(
-            135deg,
-            #1b0432 0%,
-            #3c1053 40%,
-            #6e1b80 75%,
-            #2a0a4f 100%
+         background: linear-gradient(135deg, #3c1053 0%, #6e1b80 100%);
+
           );
         }
         .content-wrapper {
