@@ -66,8 +66,8 @@ localStorage.setItem('typeEarnSession', sessionId);
       </button>
 
       <div className="content-wrapper">
-        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={34} height={34} />
-        <button className="start-button" onClick={handleStart}>
+        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={70} height={70} />
+        <button className="start-button mt-8" onClick={handleStart}>
           Start Type and Earn
         </button>
       </div>
@@ -106,8 +106,8 @@ localStorage.setItem('typeEarnSession', sessionId);
         }
         .start-button {
           width: 100%;
-          background: linear-gradient(135deg, #ee1bd6 0%, #d900fff2 100%);
-          color: #fff;
+          background: linear-gradient(135deg, #1eec06f2 0%, #1eec06f2 100%);
+          color: #000000f2;  
           font-size: 1.2rem;
           font-weight: 600;
           padding: 0.75rem 1.5rem;
