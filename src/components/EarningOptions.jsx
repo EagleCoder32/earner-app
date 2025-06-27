@@ -38,8 +38,8 @@ export default function EarningOptions() {
             <Image
               src={iconUrl}
               alt={title}
-              width={80}
-              height={80}
+              width={60}
+              height={60}
               className="w-20 h-20 object-cover rounded-2xl"
             />
           </div>
