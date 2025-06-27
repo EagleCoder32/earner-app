@@ -9,18 +9,18 @@ export default function EarningOptions() {
 
     {
       href: '/type-earn',
-      iconUrl: 'Do Captcha and Earn.webp',
+      iconUrl: '/typing.svg',
       title: 'Type & Earn',
       description: 'Do typing to earn',
-      gradient: 'bg-gradient-to-r from-[#0d2cce82] to-[#0018ff]',
+      gradient: 'bg-gradient-to-r from-[#0029ffe3] to-[#0018ff]',
     },
 
     {
       href: '/read-earn',
-      iconUrl: '/read and earn.webp',
+      iconUrl: '/read-earn.svg',
       title: 'Read & Earn',
       description: 'Read short articles to earn',
-      gradient: 'bg-gradient-to-r from-[#0d2cce82] to-[#0018ff]',
+      gradient: 'bg-gradient-to-r from-[#0029ffe3] to-[#0018ff]',
     },
 
   ];
@@ -33,14 +33,14 @@ export default function EarningOptions() {
           href={href}
           className="block rounded-lg shadow-md overflow-hidden transform transition hover:shadow-lg hover:-translate-y-1"
         >
-          {/* Gradient header with centered image */}
+             {/* Gradient header with centered image */}
           <div className={`${gradient} h-24 flex justify-center items-center`}>
             <Image
-                src="/earner-eagle.webp" //
+              src={iconUrl}
               alt={title}
-              width={80} // Add fixed width
+              width={80}
               height={80}
-              className="w-20 h-20 object-cover rounded-full border-2 border-black"
+              className="w-20 h-20 object-cover rounded-2xl"
             />
           </div>
 
