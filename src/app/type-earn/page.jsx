@@ -129,7 +129,7 @@ localStorage.setItem('typeEarnSession', sessionId);
           background: transparent;
           border: none;
           color: #fff;
-          font-size: 30px;
+          font-size: 20px;
           cursor: pointer;
           padding: 0.25rem 0.5rem;
           font-weight: 700;
