@@ -2,8 +2,6 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import DashboardNavbar from '@/components/DashboardNavbar';
 import EarningOptions from "@/components/EarningOptions";
-import Footer from "@/components/Footer";
-
 
 export default async function DashboardPage() {
   const { userId } = await auth();
@@ -14,7 +12,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-          <main className="flex flex-col min-h-screen bg-black">
+      <main className="flex flex-col min-h-screen bg-black">
 
         <DashboardNavbar />
 

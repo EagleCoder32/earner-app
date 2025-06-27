@@ -26,7 +26,7 @@ export default function EarningOptions() {
   ];
 
   return (
-    <div style={{ marginTop: "-75px" }} className="grid grid-cols-1 sm:grid-cols-2 gap-28">
+    <div style={{ marginTop: "-75px" }} className="grid grid-cols-1 sm:grid-cols-2 gap-24">
       {options.map(({ href, iconUrl, title, description, gradient }) => (
         <Link
           key={href}
