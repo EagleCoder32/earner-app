@@ -4,19 +4,19 @@ import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-14">
-      <div className="container mx-auto px-6 py-8 text-center space-y-6 mt-40">
+    <footer className="bg-gray-900 text-gray-300">
+      <div className="container mx-auto px-6 py-8 text-center space-y-6 mt-2  h-40">
         {/* Branding */}
         <div className="flex justify-center">
           <Image
             src="/earner-eagle.webp"
             alt="Eagle Earner"
-            width={80} 
+            width={80}
             height={80}
-            className="h-14 w-auto"
+            className="h-14 w-auto -mt-6 -mb-5"
           />
         </div>
-     
+
         {/* Links */}
         <nav className="flex justify-center flex-wrap gap-6 text-white">
           {["About", "Support", "FAQ?"].map((link) => (
@@ -31,7 +31,7 @@ export default function Footer() {
         </nav>
 
         {/* Social (use your own URLs or replace with SVGs) */}
-        <div className="flex justify-center space-x-5 pt-4 -mb-28">
+        <div className="flex justify-center space-x-5 p-0">
 
           <a href="https://facebook.com" aria-label="Facebook">
             <Facebook size={26} color="#1877F2" />
@@ -46,10 +46,6 @@ export default function Footer() {
           <a href="https://instagram.com" aria-label="Instagram" className="hover:text-white">
             <Instagram size={26} color="#E4405F" />
           </a>
-
-
-
-
 
         </div>
       </div>

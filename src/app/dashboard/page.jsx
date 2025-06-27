@@ -14,18 +14,22 @@ export default async function DashboardPage() {
 
   return (
     <>
-    <main className="p-4 bg-black">
-          <DashboardNavbar />
+          <main className="flex flex-col min-h-screen bg-black">
 
-           <div className="mt-32">
-      {/* other dashboard content */}
-      <EarningOptions />
-    </div>
+        <DashboardNavbar />
 
-            {/* Footer */}
-            <Footer />
-    </main>
+        <div className="flex-grow pt-32 px-4">
 
-      </>
+          {/* other dashboard content */}
+          <EarningOptions />
+        </div>
+
+        {/* Footer */}
+
+        <Footer />
+
+      </main>
+
+    </>
   );
 }

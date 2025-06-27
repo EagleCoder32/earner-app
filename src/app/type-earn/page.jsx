@@ -85,8 +85,7 @@ export default function TypeAndEarnPage() {
           width: 100vw;
           min-height: 100vh;
          background: linear-gradient(135deg, #3c1053 0%, #6e1b80 100%);
-         padding-bottom: 150px;
-
+         
 
           );
         }
