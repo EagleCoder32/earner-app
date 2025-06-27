@@ -24,10 +24,6 @@ export default async function DashboardPage() {
           <EarningOptions />
         </div>
 
-        {/* Footer */}
-
-        <Footer />
-
       </main>
 
     </>
