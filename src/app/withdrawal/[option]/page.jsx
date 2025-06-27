@@ -82,15 +82,21 @@ export default function OptionPage() {
   };
 
   return (
+     <>
+
+      {/* 1) Back button lives entirely outside the padded container */}
+      <div className="px-4 pt-6">
+        <Link href="/withdrawal">
+          <span className="inline-block text-blue-500 hover:underline">
+            ← Back
+          </span>
+        </Link>
+      </div>
+    
    <div className="max-w-screen-md mx-auto px-4 py-6 font-sans">
   {/* Header */}
+  
   <div className="relative mb-8">
-    {/* Back button, positioned absolutely at left */}
-    <Link href="/withdrawal">
-      <span className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer text-blue-500">
-        ← Back
-      </span>
-    </Link>
 
     {/* Centered title */}
     <h1 className="text-3xl font-bold text-center">
@@ -188,5 +194,6 @@ export default function OptionPage() {
         </div>
       )}
     </div>
+     </>
   );
 }
