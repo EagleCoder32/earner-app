@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import articleList from '../articleList';
+import { ArrowLeft } from 'lucide-react';
 
 // Fisher–Yates shuffle
 function shuffleArray(arr) {
@@ -66,13 +67,14 @@ export default function ReadEarnPage() {
   return (
     <div className="page">
 
-          {/* ← Back button */}
+         {/* Back button */}
       <button
-        className="back-button"
         onClick={() => router.push('/dashboard')}
         aria-label="Back to dashboard"
+        className="absolute top-4 left-4 flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-base font-semibold px-3 py-1 rounded pr-5"
       >
-        ← Back
+        <ArrowLeft size={20} />
+        Back
       </button>
 
 
@@ -111,20 +113,6 @@ export default function ReadEarnPage() {
           background: linear-gradient(135deg, #3c1053 0%, #6e1b80 100%);
           padding: 1rem;
         }
-
-         .back-button {
-          position: absolute;
-          top: 1rem;
-          left: 1rem;
-          background: transparent;
-          border: none;
-          color: #fff;
-          font-size: 1rem;
-          cursor: pointer;
-          padding: 0.25rem 0.5rem;
-        }
-
-
 
         .card {
           background: rgba(255, 255, 255, 0.1);

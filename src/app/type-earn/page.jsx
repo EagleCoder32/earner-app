@@ -3,6 +3,8 @@
 import React, { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react';
+
 
 
 export default function TypeAndEarnPage() {
@@ -56,14 +58,17 @@ localStorage.setItem('typeEarnSession', sessionId);
   return (
     <div className="page-container">
 
-      {/* ◀︎ Back button */}
+  
+        {/* Back button */}
       <button
-        className="back-button"
         onClick={() => router.push('/dashboard')}
         aria-label="Back to dashboard"
+        className="absolute top-4 left-4 flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-base font-semibold px-3 py-1 rounded pr-5"
       >
-        ← Back
+        <ArrowLeft size={20} />
+        Back
       </button>
+
 
       <div className="content-wrapper">
         <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={70} height={70} />
@@ -117,23 +122,7 @@ localStorage.setItem('typeEarnSession', sessionId);
           transition: transform 0.2s, box-shadow 0.2s;
           box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
-        .start-button:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
-        }
-
-       .back-button {
-          position: absolute;
-          top: 1rem;
-          left: 1rem;
-          background: transparent;
-          border: none;
-          color: #fff;
-          font-size: 20px;
-          cursor: pointer;
-          padding: 0.25rem 0.5rem;
-          font-weight: 700;
-        }
+     
 
       `}</style>
     </div>
