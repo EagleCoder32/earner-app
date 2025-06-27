@@ -119,10 +119,20 @@ export default function OptionPage() {
         ))}
       </div>
 
-      {/* Form Modal */}
+       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-sm">
+          <div className="relative bg-white rounded-lg p-6 w-11/12 max-w-sm">
+            {/* ✕ Close button */}
+            <button
+              onClick={() => setShowForm(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-800"
+              aria-label="Close form"
+            >
+              &times;
+            </button>
+
+
             <form onSubmit={handleSubmit}>
               <h2 className="text-xl font-semibold mb-4">
                 Redeem {selectedTier.label}
