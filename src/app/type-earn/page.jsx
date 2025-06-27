@@ -70,9 +70,9 @@ export default function TypeAndEarnPage() {
       </button>
 
 
-      <div className="content-wrapper">
-        <Image src="/typing.svg" alt="Typing Icon" className="icon-svg" width={70} height={70} />
-        <button className="start-button mt-8" onClick={handleStart}>
+      <div className="content-wrapper justify-center">
+        <Image src="/typing.svg" alt="Typing Icon" width={75} height={75} />
+        <button className="start-button mt-7" onClick={handleStart}>
           Start Type and Earn
         </button>
       </div>
@@ -92,21 +92,19 @@ export default function TypeAndEarnPage() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background: rgba(0, 0, 0, 0.5);
+          background:rgb(0 0 0 / 44%);
           backdrop-filter: blur(8px);
           padding: 2.5rem 2rem;
           border-radius: 1.5rem;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-          max-width: 350px;
-          width: 90%;
+          
+            max-width: 430px;
+          width: 100%;        
+              height: 290px;
+          width: 85%;
         }
-        .icon-svg {
-          width: 4.5rem;
-          height: 4.5rem;
-          margin-bottom: 1.5rem;
-        }
+        
         .start-button {
-          width: 100%;
+          width: 80%;
           background: linear-gradient(135deg, #1eec06f2 0%, #1eec06f2 100%);
           color: #000000f2;  
           font-size: 1.25rem;
