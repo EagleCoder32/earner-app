@@ -82,14 +82,22 @@ export default function OptionPage() {
   };
 
   return (
-    <div className="max-w-screen-md mx-auto px-4 py-6 font-sans">
-      {/* Header */}
-      <div className="flex items-center mb-8">
-        <Link href="/withdrawal">
-          <span className="mr-4 cursor-pointer text-blue-500">← Back</span>
-        </Link>
-        <h1 className="text-3xl font-bold">{item.name}</h1>
-      </div>
+   <div className="max-w-screen-md mx-auto px-4 py-6 font-sans">
+  {/* Header */}
+  <div className="relative mb-8">
+    {/* Back button, positioned absolutely at left */}
+    <Link href="/withdrawal">
+      <span className="absolute left-0 top-1/2 -translate-y-1/2 cursor-pointer text-blue-500">
+        ← Back
+      </span>
+    </Link>
+
+    {/* Centered title */}
+    <h1 className="text-3xl font-bold text-center">
+      {item.name}
+    </h1>
+  </div>
+
 
       {/* Tier buttons */}
       <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
