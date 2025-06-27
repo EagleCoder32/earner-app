@@ -73,7 +73,7 @@ export default function TypeAndEarnPage() {
       <div className="content-wrapper justify-center">
         <Image src="/typing.svg" alt="Typing Icon" width={75} height={75} />
         <button className="start-button mt-7" onClick={handleStart}>
-          Start Type and Earn
+          Type and Earn
         </button>
       </div>
 
