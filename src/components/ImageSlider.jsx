@@ -4,15 +4,7 @@
 import { useState, useEffect, Fragment } from "react";
 import Image from "next/image";
 
-/**
- * ImageSlider displays multiple categories (rows) that slide together,
- * each row cycles independently when its own images end.
- *
- * Props:
- * - categories: Array<{ title: string, items: {src: string, caption: string}[] }>
- * - visibleCount: how many items to show per row at once (default 3)
- * - interval: slide interval in ms (default 3000)
- */
+
 export default function ImageSlider({
   categories = [],
   visibleCount = 3,
@@ -49,18 +41,26 @@ export default function ImageSlider({
               {title}
             </h3>
           )}
-          <div className="overflow-hidden w-full">
+
+          <div
+            className="overflow-x-auto scrollbar-hide w-full"
+            ref={(el) => (scrollContainers.current[row] = el)}
+            onScroll={() => handleUserScroll(row)}
+            onMouseEnter={() => pause(row)}
+            onMouseLeave={() => resume(row)}
+            onTouchStart={() => pause(row)}
+            onTouchEnd={() => resume(row)}
+          >
             <div
-              className="flex gap-4 transition-transform duration-500"
-              style={{
-                width: "100%",
-                transform: `translateX(-${shiftPct(row)}%)`,
-              }}
+              className="flex gap-4 snap-x snap-mandatory"
+              style={{ width: "100%" /* keep full width to align columns */ }}
             >
+
+
               {items.map(({ src, caption }, idx) => (
                 <div
                   key={idx}
-                  className="relative flex-shrink-0"
+  className="relative flex-shrink-0 snap-start"
                   style={{
                     width: `${100 / visibleCount}%`,
                     height: "100px",
