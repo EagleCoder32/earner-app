@@ -1,9 +1,8 @@
 // src/components/ImageSlider.jsx
 "use client";
 
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import Image from "next/image";
-
 
 export default function ImageSlider({
   categories = [],
@@ -14,23 +13,55 @@ export default function ImageSlider({
   const [currentIdxs, setCurrentIdxs] = useState(
     categories.map(() => 0)
   );
+  // paused flags per row
+  const [paused, setPaused] = useState(
+    categories.map(() => false)
+  );
+  // refs to each row’s scroll container
+  const scrollContainers = useRef([]);
 
-  // auto‑advance timer
+  // Pause/resume helpers
+  const pause = (row) =>
+    setPaused((p) => p.map((v, i) => (i === row ? true : v)));
+  const resume = (row) =>
+    setPaused((p) => p.map((v, i) => (i === row ? false : v)));
+
+  // When user scrolls manually: snap and update index
+  const handleUserScroll = (row) => {
+    const cont = scrollContainers.current[row];
+    if (!cont) return;
+    const slot = cont.clientWidth / visibleCount;
+    const idx = Math.round(cont.scrollLeft / slot);
+    setCurrentIdxs((p) => p.map((v, i) => (i === row ? idx : v)));
+    pause(row);
+    // resume after one interval
+    setTimeout(() => resume(row), interval);
+  };
+
+  // Autoplay effect (scrolls, unless paused)
   useEffect(() => {
     const iv = setInterval(() => {
       setCurrentIdxs((prev) =>
         prev.map((curr, row) => {
+          if (paused[row]) return curr;
           const len = categories[row].items.length;
-          return (curr + 1) % len;
+          const next = (curr + 1) % len;
+
+          // smooth‑scroll the container
+          const cont = scrollContainers.current[row];
+          if (cont) {
+            const slot = cont.clientWidth / visibleCount;
+            cont.scrollTo({
+              left: next * slot,
+              behavior: "smooth",
+            });
+          }
+          return next;
         })
       );
     }, interval);
     return () => clearInterval(iv);
-  }, [categories, interval]);
-
-  // percentage to slide for this row
-  const shiftPct = (row) =>
-    (currentIdxs[row] * 100) / visibleCount;
+  }, [categories, interval, paused, visibleCount]);
 
   return (
     <div className="max-w-4xl mx-auto my-12">
@@ -53,14 +84,12 @@ export default function ImageSlider({
           >
             <div
               className="flex gap-4 snap-x snap-mandatory"
-              style={{ width: "100%" /* keep full width to align columns */ }}
+              style={{ width: "100%" }}
             >
-
-
               {items.map(({ src, caption }, idx) => (
                 <div
                   key={idx}
-  className="relative flex-shrink-0 snap-start"
+                  className="relative flex-shrink-0 snap-start"
                   style={{
                     width: `${100 / visibleCount}%`,
                     height: "100px",
