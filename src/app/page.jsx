@@ -72,42 +72,39 @@ export default async function HomePage() {
           </h2>
 
           {/* ==== Image Slider ==== */}
+
           <ImageSlider
-            images={[
+            visibleCount={3}
+            interval={3000}
+            categories={[
               {
-                title: 'Cash',
+                title: "Cash",
                 items: [
-                  { src: '/paypal.svg', caption: 'PayPal' },
-                  { src: '/upi.svg', caption: 'UPI' },
-                  { src: '/gcash.webp', caption: 'GCash' },
+                  { src: "/paypal.svg", caption: "PayPal" },
+                  { src: "/upi.svg", caption: "UPI" },
+                  { src: "/gcash.webp", caption: "GCash" },
                 ],
               },
               {
-                title: 'Gift Cards',
+                title: "Gift Cards",
                 items: [
-                  { src: '/google-play.svg', caption: 'Google Play Redeem Code' },
-                  { src: '/amazon-gift-card.svg', caption: 'Amazon Gift Card' },
-                  { src: '/flipkart.svg', caption: 'Flipkart Gift Card' },
-                  { src: '/steam.svg', caption: 'Steam Gift Card' },
+                  { src: "/google-play.svg", caption: "Google Play Redeem Code" },
+                  { src: "/amazon-gift-card.svg", caption: "Amazon" },
+                  { src: "/flipkart.svg", caption: "Flipkart" },
+                  { src: "/steam.svg", caption: "Steam" },
                 ],
               },
               {
-                title: 'Games Currency',
+                title: "Games Currency",
                 items: [
-                  { src: '/free-fire-diamond.png', caption: 'Free Fire Diamonds' },
-                  { src: '/roblox-robux.svg', caption: 'Robux' },
-                  { src: '/uc.png', caption: 'BGMI/PUBG UC' },
+                  { src: "/free-fire-diamond.png", caption: "Free Fire Diamond" },
+                  { src: "/roblox-robux.svg", caption: "Robux" },
+                  { src: "/uc.png", caption: "BGMI/PUBG UC" },
+                  { src: "/call-of-duty-mobile-cp.png", caption: "Call of Duty (CP)" },
+                  { src: "/mobile-legends-diamond.webp", caption: "Mobile Legends (Diamonds)" },
+                  { src: "/fortnite-v-bucks.webp", caption: "Fortnite (Vbucks)" },
                 ],
               },
-              {
-                title: 'Games Currency',
-                items: [
-                  { src: '/call-of-duty-mobile-cp.png', caption: 'Call of Duty (CP)' },
-                  { src: '/mobile-legends-diamond.webp', caption: 'Mobile Legends (Diamonds)' },
-                  { src: '/fortnite-v-bucks.webp', caption: 'Fortnite (Vbucks)' },
-                ],
-              },
-              // more groups…
             ]}
           />
         </section>
