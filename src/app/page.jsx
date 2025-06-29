@@ -88,7 +88,7 @@ export default async function HomePage() {
               {
                 title: "Gift Cards",
                 items: [
-                  { src: "/google-play.svg", caption: "Google Play Redeem Code" },
+                  { src: "/google-play.svg", caption: "Google Play\nRedeem Code" },
                   { src: "/amazon-gift-card.svg", caption: "Amazon" },
                   { src: "/flipkart.svg", caption: "Flipkart" },
                   { src: "/steam.svg", caption: "Steam" },
@@ -97,12 +97,12 @@ export default async function HomePage() {
               {
                 title: "Games Currency",
                 items: [
-                  { src: "/free-fire-diamond.png", caption: "Free Fire Diamond" },
+                  { src: "/free-fire-diamond.png", caption: "Free Fire\nDiamond" },
                   { src: "/roblox-robux.svg", caption: "Robux" },
-                  { src: "/uc.png", caption: "BGMI/PUBG UC" },
-                  { src: "/call-of-duty-mobile-cp.png", caption: "Call of Duty (CP)" },
-                  { src: "/mobile-legends-diamond.webp", caption: "Mobile Legends (Diamonds)" },
-                  { src: "/fortnite-v-bucks.webp", caption: "Fortnite (Vbucks)" },
+                  { src: "/uc.png", caption: "BGMI/PUBG\nUC" },
+                  { src: "/call-of-duty-mobile-cp.png", caption: "Call of Duty\n(CP)" },
+                  { src: "/mobile-legends-diamond.webp", caption: "Mobile Legends\n (Diamonds)" },
+                  { src: "/fortnite-v-bucks.webp", caption: "Fortnite \n(Vbucks)" },
                 ],
               },
             ]}
