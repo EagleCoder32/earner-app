@@ -14,8 +14,10 @@ export default function ImageSlider({
     categories.map(() => 0)
   );
 
-   // track whether user is interacting
- const [isInteracting, setIsInteracting] = useState(false);
+  // track whether user is interacting (touch or hover)
+  const [isInteracting, setIsInteracting] = useState(false);
+
+  // refs to each row’s scroll container
   const scrollContainers = useRef([]);
 
   // When user scrolls manually, recompute currentIdx
@@ -57,18 +59,13 @@ export default function ImageSlider({
           )}
 
           <div
-           className={`w-full
-            ${isInteracting ? "overflow-x-auto" : "overflow-x-hidden"}
-        ${isInteracting ? "" : "scrollbar-hide"}`}
-          
-
-
+            className={`w-full ${isInteracting ? "overflow-x-auto" : "overflow-x-hidden"} ${isInteracting ? "" : "scrollbar-hide"}`}
             ref={(el) => (scrollContainers.current[row] = el)}
-             onScroll={() => handleUserScroll(row)}
-     onTouchStart={() => setIsInteracting(true)}
-         onTouchEnd={() => setIsInteracting(false)}
-        onMouseEnter={() => setIsInteracting(true)}
-          onMouseLeave={() => setIsInteracting(false)}
+            onScroll={() => handleUserScroll(row)}
+            onTouchStart={() => setIsInteracting(true)}
+            onTouchEnd={() => setIsInteracting(false)}
+            onMouseEnter={() => setIsInteracting(true)}
+            onMouseLeave={() => setIsInteracting(false)}
           >
             <div
               className="flex gap-4 snap-x snap-mandatory"
@@ -111,4 +108,3 @@ export default function ImageSlider({
     </div>
   );
 }
-
