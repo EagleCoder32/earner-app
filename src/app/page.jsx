@@ -67,7 +67,7 @@ export default async function HomePage() {
         {/* ==== Image Slider ==== */}
         <section className="my-24">
 
-          <h2 className="my-14 text-center text-4xl font-extrabold text-white ">
+          <h2 className="my-14 text-center text-4xl font-extrabold text-green-500 ">
             Redeem 💵
           </h2>
 
@@ -147,7 +147,7 @@ export default async function HomePage() {
         <div className="h-1 bg-white opacity-65 my-24" />
 
         {/* ==== User Reviews ==== */}
-        <section className="container mx-auto px-6 lg:px-20 mt-20 mb-0">
+        <section className="container mx-auto px-6 lg:px-20 mt-20 mb-16">
           <h2 className="text-3xl font-extrabold text-center  text-lime-400 -mt-11">User Reviews</h2>
 
           {/* ==== Testimonials ==== */}
