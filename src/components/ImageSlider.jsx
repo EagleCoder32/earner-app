@@ -56,7 +56,9 @@ export default function ImageSlider({
           )}
 
           <div
-            className="overflow-x-auto scrollbar-hide w-full"
+          className="overflow-x-auto scrollbar-hide w-full md:overflow-x-hidden"
+
+
             ref={(el) => (scrollContainers.current[row] = el)}
             onScroll={() => handleUserScroll(row)}
           >
@@ -101,3 +103,4 @@ export default function ImageSlider({
     </div>
   );
 }
+

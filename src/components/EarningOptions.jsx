@@ -15,6 +15,7 @@ export default function EarningOptions() {
       gradient: 'bg-gradient-to-r from-[#0029ffe3] to-[#0018ff]',
     },
 
+
     {
       href: '/read-earn',
       iconUrl: '/read-earn.svg',
