@@ -6,7 +6,7 @@ import HeroCard from "@/components/HeroCard";
 import ImageSlider from "@/components/ImageSlider";
 import Testimonials from "@/components/Testimonials";
 import Navbar from '@/components/Navbar';
-import {SignUpButton} from '@clerk/nextjs';
+import { SignUpButton } from '@clerk/nextjs';
 
 
 
@@ -14,7 +14,7 @@ import {SignUpButton} from '@clerk/nextjs';
 
 export default async function HomePage() {
 
-   // 1️⃣ Check auth at render time
+  // 1️⃣ Check auth at render time
   const { userId } = await auth();
   if (userId) {
     // 2️⃣ If they’re signed in, boot them to /dashboard
@@ -22,7 +22,7 @@ export default async function HomePage() {
   }
 
 
-  
+
   return (
     <>
 
@@ -42,11 +42,11 @@ export default async function HomePage() {
               <p className="mt-4 text-lg text-purple-100 max-w-2xl mx-auto">
                 100% Legit Site for Earning and we guranteed we pay everyone, if you not believe then try one time  !
               </p>
-               <SignUpButton mode="modal">
-              <button className="mt-8 inline-block bg-white text-purple-700 py-3 px-8 rounded-full  transition font-bold">
-                Start Earning!
-              </button>
-               </SignUpButton>
+              <SignUpButton mode="modal">
+                <button className="mt-8 inline-block bg-white text-purple-700 py-3 px-8 rounded-full  transition font-bold">
+                  Start Earning!
+                </button>
+              </SignUpButton>
             </div>
           </div>
 
@@ -60,7 +60,7 @@ export default async function HomePage() {
         </section>
 
         {/* Divider */}
-        <div className="w-full h-1 bg-white opacity-65 my-24" />
+        <div className="w-full h-1 bg-white opacity-65 my-12 -mb-9 mt-20" />
 
 
 
@@ -71,52 +71,77 @@ export default async function HomePage() {
             Redeem 💵
           </h2>
 
+          {/* ==== Image Slider ==== */}
           <ImageSlider
             images={[
-              { src: "/google-play.svg", caption: "Google Play Redeem Code" },
-              { src: "/google-play.svg", caption: "Google Play Redeem Code" },
-              { src: "/google-play.svg", caption: "Google Play Redeem Code" },
-              { src: "/google-play.svg", caption: "Google Play Redeem Code" },
-
+              {
+                title: 'Cash',
+                items: [
+                  { src: '/paypal.svg', caption: 'PayPal' },
+                  { src: '/upi.svg', caption: 'UPI' },
+                  { src: '/gcash.webp', caption: 'GCash' },
+                ],
+              },
+              {
+                title: 'Gift Cards',
+                items: [
+                  { src: '/google-play.svg', caption: 'Google Play Redeem Code' },
+                  { src: '/amazon-gift-card.svg', caption: 'Amazon Gift Card' },
+                  { src: '/flipkart.svg', caption: 'Flipkart Gift Card' },
+                  { src: '/steam.svg', caption: 'Steam Gift Card' },
+                ],
+              },
+              {
+                title: 'Games Currency',
+                items: [
+                  { src: '/free-fire-diamond.png', caption: 'Free Fire Diamonds' },
+                  { src: '/roblox-robux.svg', caption: 'Robux' },
+                  { src: '/uc.png', caption: 'BGMI/PUBG UC' },
+                ],
+              },
+              {
+                title: 'Games Currency',
+                items: [
+                  { src: '/call-of-duty-mobile-cp.png', caption: 'Call of Duty (CP)' },
+                  { src: '/mobile-legends-diamond.webp', caption: 'Mobile Legends (Diamonds)' },
+                  { src: '/fortnite-v-bucks.webp', caption: 'Fortnite (Vbucks)' },
+                ],
+              },
+              // more groups…
             ]}
           />
         </section>
 
+
         {/* Divider */}
-        <div className="w-full h-1 bg-white opacity-65 my-24" />
+        <div className="w-full h-1 bg-white opacity-65 my-24 -mt-7" />
 
 
         {/* ==== Features Teaser ==== */}
         <h2 className="my-0 text-center text-4xl font-extrabold text-white mb-16">
-          Earning Options💰
+          How To Earn💰
         </h2>
         <section className="container mx-auto px-6 lg:px-20  grid grid-cols-1 md:grid-cols-3 gap-8">
 
 
           <div className="bg-white rounded-xl shadow p-6 text-center">
-            <h3 className="text-2xl font-semibold mb-2">🎥 Watch &amp; Earn</h3>
+            <h3 className="text-2xl font-semibold mb-2">🎥 Type &amp; Earn</h3>
             <p className="text-gray-600">
-              Earn points by watching Youtube videos. The longer you watch, the more you earn!
+              Earn by typing simple text
             </p>
           </div>
 
           <div className="bg-white rounded-xl shadow p-6 text-center">
             <h3 className="text-2xl font-semibold mb-2">📰 Read &amp; Earn</h3>
             <p className="text-gray-600">
-              Earn points by watching Youtube videos. The longer you watch, the more you earn!
+              Read articles and Earn
             </p>
           </div>
 
           <div className="bg-white rounded-xl shadow p-6 text-center">
-            <h3 className="text-2xl font-semibold mb-2">🎡 Spin &amp; Win</h3>
-            <p className="text-gray-600">
-              Spin our daily wheel for a chance at bonus points, multipliers, and surprise rewards.
-            </p>
-          </div>
-          <div className="bg-white rounded-xl shadow p-6 text-center">
             <h3 className="text-2xl font-semibold mb-2">💰 Redeem</h3>
             <p className="text-gray-600">
-              Cash out your points instantly via PayPal, UPI, or grab gift cards to your favorite stores.
+              Cash out your points instantly via Cash, Gift Cards, or Game Currency
             </p>
           </div>
         </section>
