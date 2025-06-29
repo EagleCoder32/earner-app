@@ -14,8 +14,10 @@ export default function ImageSlider({
     categories.map(() => 0)
   );
 
-  // track whether user is interacting (touch or hover)
-  const [isInteracting, setIsInteracting] = useState(false);
+  // track whether user is interacting per row
+  const [isInteracting, setIsInteracting] = useState(
+    categories.map(() => false)
+  );
 
   // refs to each row’s scroll container
   const scrollContainers = useRef([]);
@@ -59,13 +61,31 @@ export default function ImageSlider({
           )}
 
           <div
-            className={`w-full ${isInteracting ? "overflow-x-auto" : "overflow-x-hidden"} ${isInteracting ? "" : "scrollbar-hide"}`}
+            className={`w-full ${
+              isInteracting[row] ? "overflow-x-auto" : "overflow-x-hidden"
+            } ${isInteracting[row] ? "" : "scrollbar-hide"}`}
             ref={(el) => (scrollContainers.current[row] = el)}
             onScroll={() => handleUserScroll(row)}
-            onTouchStart={() => setIsInteracting(true)}
-            onTouchEnd={() => setIsInteracting(false)}
-            onMouseEnter={() => setIsInteracting(true)}
-            onMouseLeave={() => setIsInteracting(false)}
+            onTouchStart={() =>
+              setIsInteracting((prev) =>
+                prev.map((v, i) => (i === row ? true : v))
+              )
+            }
+            onTouchEnd={() =>
+              setIsInteracting((prev) =>
+                prev.map((v, i) => (i === row ? false : v))
+              )
+            }
+            onMouseEnter={() =>
+              setIsInteracting((prev) =>
+                prev.map((v, i) => (i === row ? true : v))
+              )
+            }
+            onMouseLeave={() =>
+              setIsInteracting((prev) =>
+                prev.map((v, i) => (i === row ? false : v))
+              )
+            }
           >
             <div
               className="flex gap-4 snap-x snap-mandatory"
