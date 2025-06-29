@@ -43,7 +43,7 @@ export default function ImageSlider({
   return (
     <div className="max-w-4xl mx-auto my-12">
       {categories.map(({ title, items }, row) => (
-        <div key={row} className="mb-8">
+        <div key={row} className="mb-16">
           {title && (
             <h3 className="mb-9 text-2xl font-bold text-white text-center">
               {title}
