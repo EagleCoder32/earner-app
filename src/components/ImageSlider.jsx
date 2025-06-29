@@ -19,8 +19,24 @@ export default function ImageSlider({
     categories.map(() => false)
   );
 
+  // track if slider is in viewport
+  const [isVisible, setIsVisible] = useState(false);
+
+  // ref for the entire slider wrapper
+  const sliderRef = useRef(null);
   // refs to each row’s scroll container
   const scrollContainers = useRef([]);
+
+  // Observe visibility of the slider
+  useEffect(() => {
+    if (!sliderRef.current) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.5 }
+    );
+    obs.observe(sliderRef.current);
+    return () => obs.disconnect();
+  }, []);
 
   // When user scrolls manually, recompute currentIdx
   const handleUserScroll = (row) => {
@@ -33,25 +49,35 @@ export default function ImageSlider({
     );
   };
 
-  // auto‑advance timer (unchanged)
+  // auto‑advance timer: only if slider is visible
   useEffect(() => {
     const iv = setInterval(() => {
+      if (!isVisible) return;
       setCurrentIdxs((prev) =>
         prev.map((curr, row) => {
           const len = categories[row].items.length;
-          return (curr + 1) % len;
+          const next = (curr + 1) % len;
+          // scroll into view
+          const cont = scrollContainers.current[row];
+          if (cont) {
+            cont.scrollTo({
+              left: next * (cont.clientWidth / visibleCount),
+              behavior: "smooth",
+            });
+          }
+          return next;
         })
       );
     }, interval);
     return () => clearInterval(iv);
-  }, [categories, interval]);
+  }, [categories, interval, isVisible, visibleCount]);
 
   // percentage to slide for this row
   const shiftPct = (row) =>
     (currentIdxs[row] * 100) / visibleCount;
 
   return (
-    <div className="max-w-4xl mx-auto my-12">
+    <div ref={sliderRef} className="max-w-4xl mx-auto my-12">
       {categories.map(({ title, items }, row) => (
         <div key={row} className="mb-16">
           {title && (
