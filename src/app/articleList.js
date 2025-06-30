@@ -12,7 +12,7 @@ const articleList = [
   'https://eagleearner.com/what-is-gigwalk',
 
 
-  'https://eagleearner.com/best-passive-income-apps',
+  'https://eagleearner.com/banana-telegram-bot',
 
  
 
