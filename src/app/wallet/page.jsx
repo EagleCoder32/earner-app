@@ -27,6 +27,17 @@ export default async function WalletPage() {
   // 4) Render the wallet UI
   return (
     <div className="flex flex-col items-center justify-center py-12 px-4 min-h-screen bg-gray-50">
+
+         {/* ← Add Transaction History button here */}
+      <div className="absolute top-4 right-4">
+        <Link
+          href="/withdrawal/history"
+          className="px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+        >
+          Transaction History
+        </Link>
+      </div>
+
       <div className="flex items-center space-x-3">
         <span className="text-5xl">🪙</span>
         <span className="text-5xl font-bold">{points.toLocaleString()}</span>
