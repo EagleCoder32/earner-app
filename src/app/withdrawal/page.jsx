@@ -54,7 +54,7 @@ export default function WithdrawalPage() {
     />
   </Link>
       <h1 className="text-2xl font-bold">Withdrawal</h1>
-        {/* Transaction History link */}
+       
       </div>
 
       {/* Change country button */}

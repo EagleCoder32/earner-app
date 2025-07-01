@@ -8,7 +8,7 @@ export default function HeroCard() {
           className="absolute top-0 left-0 w-full h-full rounded-lg"
           src="https://www.youtube.com/embed/Dq7ER1NPtGw?si=A7fZCTz6Ns5FqzRT"
           title="How to Earn on EagleEarner"
-          frameBorder="0"
+           loading="lazy"     
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
         />

@@ -9,13 +9,15 @@ export default function ImageSlider({
   visibleCount = 3,
   interval = 3000,
 }) {
+  // State for current indices and visibility
   const [currentIdxs, setCurrentIdxs] = useState(categories.map(() => 0));
-  const [isInteracting, setIsInteracting] = useState(categories.map(() => false));
   const [isVisible, setIsVisible] = useState(false);
   const sliderRef = useRef(null);
   const scrollContainers = useRef([]);
+  // Ref for debounce
+  const ticking = useRef(false);
 
-  // Visibility observer
+  // SEO: Wrap slider in a section with aria-label
   useEffect(() => {
     if (!sliderRef.current) return;
     const obs = new IntersectionObserver(
@@ -26,13 +28,19 @@ export default function ImageSlider({
     return () => obs.disconnect();
   }, []);
 
-  // Manual scroll
+  // Debounced scroll handler
   const handleUserScroll = (row) => {
     const cont = scrollContainers.current[row];
     if (!cont) return;
-    const slot = cont.clientWidth / visibleCount;
-    const idx = Math.round(cont.scrollLeft / slot);
-    setCurrentIdxs((prev) => prev.map((v, i) => (i === row ? idx : v)));
+    if (!ticking.current) {
+      ticking.current = true;
+      requestAnimationFrame(() => {
+        const slot = cont.clientWidth / visibleCount;
+        const idx = Math.round(cont.scrollLeft / slot);
+        setCurrentIdxs((prev) => prev.map((v, i) => (i === row ? idx : v)));
+        ticking.current = false;
+      });
+    }
   };
 
   // Auto-advance when visible
@@ -60,46 +68,36 @@ export default function ImageSlider({
   }, [isVisible, categories, interval, visibleCount]);
 
   return (
-    <div ref={sliderRef} className="max-w-4xl mx-auto my-12">
+    <section
+      ref={sliderRef}
+      aria-label="Redeem options carousel"
+      className="max-w-4xl mx-auto my-12"
+    >
       {categories.map(({ title, items }, row) => (
         <div key={row} className="mb-16">
           {title && (
-            <h3 className="mb-9 text-2xl font-bold text-white text-center">
+            <h2 className="mb-9 text-2xl font-bold text-white text-center">
               {title}
-            </h3>
+            </h2>
           )}
 
           <div
-            className={`w-full ${
-              isInteracting[row] ? "overflow-x-auto" : "overflow-x-hidden"
-            } ${isInteracting[row] ? "" : "scrollbar-hide"}`}
+            className="w-full overflow-x-auto"
             ref={(el) => (scrollContainers.current[row] = el)}
             onScroll={() => handleUserScroll(row)}
-            onTouchStart={() =>
-              setIsInteracting((prev) => prev.map((v, i) => (i === row))
-            )}
-            onTouchEnd={() =>
-              setIsInteracting((prev) => prev.map((v, i) => (i === row ? false : v)))
-            }
-            onMouseEnter={() =>
-              setIsInteracting((prev) => prev.map((v, i) => (i === row))
-            )}
-            onMouseLeave={() =>
-              setIsInteracting((prev) => prev.map((v, i) => (i === row ? false : v)))
-            }
           >
             <div className="flex gap-4 snap-x snap-mandatory">
               {items.map(({ src, caption }, idx) => (
                 <div
                   key={idx}
-                  className="relative flex-shrink-0 snap-start"
-                  style={{ width: `${100 / visibleCount}%`, height: "100px" }}
+                  className="relative flex-shrink-0 snap-start basis-[calc(100%/3)] h-[100px]"
                 >
                   <Image
                     src={src}
-                    alt={caption}
+                    alt={caption} // SEO: descriptive alt text
                     width={50}
                     height={50}
+                    loading="lazy" // Page speed: lazy-load images
                     className="object-contain rounded-lg mx-auto"
                   />
                   <p className="mt-2 text-white text-sm text-center">
@@ -116,6 +114,6 @@ export default function ImageSlider({
           </div>
         </div>
       ))}
-    </div>
+    </section>
   );
 }
