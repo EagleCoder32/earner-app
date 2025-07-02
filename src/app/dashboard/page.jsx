@@ -27,8 +27,8 @@ export default async function DashboardPage() {
 
         {/* Dashboard content */}
                 {/* Dashboard content starts directly under navbar */}
-        <div className="flex-grow px-4">             {/* Ensure spacing below navbar */}
-          <EarningOptions />       
+        <div className="flex-grow px-4 pt-32">  {/* space below navbar */}             {/* Ensure spacing below navbar */}
+          <EarningOptions />                      
         </div>
       </main>
     </>
