@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 export default async function DashboardPage() {
   const { userId } = await auth();                        // Auth guard
   if (!userId) {
-    return redirect('/');                       
+    return redirect('/');                                  // Redirect if not signed in
   }
 
   return (
@@ -20,16 +20,15 @@ export default async function DashboardPage() {
       </Head>
 
       {/* Main layout with dynamic padding based on navbar height */}
-      <main
-        className="flex flex-col min-h-screen bg-black"
-        style={{ paddingTop: 'var(--navbar-h, 4rem)' }}      // Dynamic padding under navbar
-      >
+            {/* Main layout without extra padding */}
+      <main className="relative flex flex-col min-h-screen bg-black">
         {/* Navbar */}
         <DashboardNavbar />
 
         {/* Dashboard content */}
-        <div className="flex-grow px-4 pt-32">             {/* Ensure spacing below navbar */}
-          <EarningOptions />
+                {/* Dashboard content starts directly under navbar */}
+        <div className="flex-grow px-4">             {/* Ensure spacing below navbar */}
+          <EarningOptions />       
         </div>
       </main>
     </>
