@@ -1,63 +1,73 @@
 // src/app/api/read-earn/verify/route.js
-import { NextResponse }      from 'next/server';
-import { getAuth }           from '@clerk/nextjs/server';
+import { NextResponse } from 'next/server';
+import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import User                  from '@/models/User';
-import ArticleProgress       from '@/models/ArticleProgress';
+import mongoose from 'mongoose';
+
+// 🍪 Reuse Your Cookie Cutters: Memoize models
+const userSchema = new mongoose.Schema({ clerkId: String, points: Number });
+const progressSchema = new mongoose.Schema({
+  clerkId: String,
+  articleIdx: Number,
+  sessionId: String,
+  points: Number,
+  redeemedAt: { type: Date, default: Date.now },
+});
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const ArticleProgress = mongoose.models.ArticleProgress || mongoose.model('ArticleProgress', progressSchema);
+
+// 📝 One-Button to Rule Them All: Consolidated error helper
+function errorResponse(message, status = 400) {
+  return NextResponse.json({ error: message }, { status });
+}
 
 export async function POST(req) {
   try {
-    // 1) Authenticate with Clerk
+    // 1️⃣ Authenticate with Clerk
     const { userId } = getAuth(req);
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 });
+      return errorResponse('Unauthenticated', 401);
     }
 
-    // 2) Parse & validate
+    // 2️⃣ Parse & validate payload
     const { articleIdx, sessionId } = await req.json();
     if (typeof articleIdx !== 'number' || !sessionId) {
-      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
+      return errorResponse('Invalid payload');
     }
 
-    // 3) Connect to MongoDB
+    // 3️⃣ Keep the Oven Hot: Cached DB connection
     await connectToDatabase();
 
-    // 4) Prevent double‐claim today
+    // 4️⃣ Prevent double-claim today
     const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
+    todayStart.setUTCHours(0, 0, 0, 0);
     const already = await ArticleProgress.findOne({
-      clerkId:    userId,
+      clerkId: userId,
       articleIdx,
-      redeemedAt: { $gte: todayStart }
+      redeemedAt: { $gte: todayStart },
     });
     if (already) {
-      return NextResponse.json({ error: 'Already claimed today' }, { status: 400 });
+      return errorResponse('Already claimed today');
     }
 
-    // 5) Award points & record
+    // 5️⃣ Award points & record progress
     const awardPoints = 20;
-    await ArticleProgress.create({
-      clerkId:   userId,
-      articleIdx,
-      sessionId,
-      points:    awardPoints
-    });
+    await ArticleProgress.create({ clerkId: userId, articleIdx, sessionId, points: awardPoints });
 
+    // 6️⃣ Find or create user and update
     let user = await User.findOne({ clerkId: userId });
-    if (!user) user = await User.create({ clerkId: userId });
-    user.points += awardPoints;
+    if (!user) {
+      user = new User({ clerkId: userId, points: awardPoints });
+    } else {
+      user.points += awardPoints;
+    }
     await user.save();
 
-    // 6) Return success
-    return NextResponse.json({
-      message:     '20 points awarded!',
-      totalPoints: user.points
-    });
+    // 7️⃣ Return success
+    return NextResponse.json({ message: `${awardPoints} points awarded!`, totalPoints: user.points });
   } catch (err) {
     console.error('🔥 Error in /api/read-earn/verify:', err);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorResponse('Internal server error', 500);
   }
 }

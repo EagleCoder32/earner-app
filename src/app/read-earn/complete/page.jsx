@@ -1,10 +1,8 @@
 // src/app/read-earn/complete/page.jsx
-
 'use client';
 
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
-
 const ERROR_MESSAGES = {
   INVALID: '❌ Invalid session or article. No points were awarded.',
   JSON_ERROR: '❌ An unknown error occurred.',
