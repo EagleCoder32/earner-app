@@ -1,6 +1,6 @@
 // src/app/api/type-earn/verify/route.js
-"use client";
-export const dynamic = 'force-dynamic';
+
+export const runtime = 'nodejs';  // Ensure Node.js runtime (not Edge) for server-only imports
 import { NextResponse } from 'next/server';
 import { getAuth }     from '@clerk/nextjs/server';
 import mongoose        from 'mongoose';
