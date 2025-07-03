@@ -1,8 +1,10 @@
 // src/app/read-earn/complete/page.jsx
+
 'use client';
 
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
+
 const ERROR_MESSAGES = {
   INVALID: '❌ Invalid session or article. No points were awarded.',
   JSON_ERROR: '❌ An unknown error occurred.',
@@ -56,12 +58,8 @@ function CompleteContent() {
       <p>Today’s date: <strong>{today}</strong></p>
 
       {/* 📌 CHANGES START: show skeleton while checking */}
-      {message === 'Checking your session…' ? (
-        <div className="mt-4 h-6 bg-gray-200 rounded w-3/4 mx-auto animate-pulse" />
-      ) : (
-        <p className="mt-4 text-lg">{message}</p>
-      )}
-      {/* 📌 CHANGES END: loading skeleton */}
+      {/* Always show status message */}
+      <p className="mt-4 text-lg">{message}</p>
 
       <button
         onClick={() => window.location.replace('/read-earn')}

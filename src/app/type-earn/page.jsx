@@ -1,125 +1,106 @@
-"use client";
+// src/app/type-earn/page.jsx
+'use client';
 
-import React, { useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import Head from 'next/head';                            // SEO: page metadata
+import React, { useEffect, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
 
-
-
-export default function TypeAndEarnPage() {
-
-  // 0) On fresh load, if we're *not* coming back from a completed claim,
-  //    clear any old sessionId so we get a brand-new chain when they click Start.
+/**
+ * 🪄 Hook: Clears old session on mount if not returning from an earn flow
+ */
+function useTypeEarnSession() {
+  const params = useRef(new URLSearchParams(window.location.search));
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (!params.get("earned")) {
-      localStorage.removeItem("typeEarnSession");
+    if (!params.current.get('earned')) {
+      localStorage.removeItem('typeEarnSession');
     }
   }, []);
+}
 
-
-
-
+/**
+ * 🔔 Hook: Shows a celebratory alert when 'earned' param appears, then cleans URL
+ */
+function useEarnedAlert() {
   const params = useSearchParams();
   const router = useRouter();
-
   useEffect(() => {
-    const earned = params.get("earned");
+    let timeout;
+    const earned = params.get('earned');
     if (earned) {
-      // 1) Show a popup
-      alert(`🎉 You got ${earned} points!`);
-
-      // 2) Log to console
-      console.log(`User earned ${earned} points`);
-
-      // 3) Optionally store locally
-      const prev = parseInt(localStorage.getItem("typeEarnPoints") || "0", 10);
-      localStorage.setItem("typeEarnPoints", prev + Number(earned));
-
-      // 4) Clean the URL after 3s so you can re‑earn later
-      setTimeout(() => {
-        router.replace("/type-and-earn", { scroll: false });
+      alert(`🎉 You got ${earned} points!`);                    // Popup celebration
+      console.log(`User earned ${earned} points`);            // Log to console
+      const prev = parseInt(localStorage.getItem('typeEarnPoints') || '0', 10);
+      localStorage.setItem('typeEarnPoints', prev + Number(earned)); // Store total
+      // Clean URL after 3s (throttled)
+      timeout = setTimeout(() => {
+        router.replace('/type-and-earn', { scroll: false });
       }, 3000);
     }
+    return () => clearTimeout(timeout);
   }, [params, router]);
+}
 
+export default function TypeAndEarnPage() {
+  const router = useRouter();
+  useTypeEarnSession();
+  useEarnedAlert();
+
+  /**
+   * 🏁 Starts a new typing session by generating a UUID and navigating
+   */
   const handleStart = () => {
-    // 1) Create a fresh sessionId for this typing chain
-    const sessionId = crypto.randomUUID();
-    localStorage.setItem('typeEarnSession', sessionId);
-
-    // 2) Navigate in the same tab instead
+    const sessionId = crypto.randomUUID();                    // Unique session token
+    localStorage.setItem('typeEarnSession', sessionId);       // Save for resume
     window.location.href =
-      `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`;
-    "noopener,noreferrer"
-  }
+      `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`; // Navigate
+  };
 
   return (
-    <div className="page-container">
+    <>
+      {/* SEO Metadata */}
+      <Head>
+        <title>Type &amp; Earn – EagleEarner</title>
+        <meta
+          name="description"
+          content="Practice typing to earn points on EagleEarner—fast, fun challenges every day!"
+        />
+      </Head>
 
-
-      {/* Back button */}
-      <button
-        onClick={() => router.push('/dashboard')}
-        aria-label="Back to dashboard"
-        className="absolute top-4 left-4 flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-base font-semibold px-3 py-1 rounded pr-5"
-      >
-        <ArrowLeft size={20} />
-        Back
-      </button>
-
-
-      <div className="content-wrapper justify-center">
-        <Image src="/typing.svg" alt="Typing Icon" width={75} height={75} />
-        <button className="start-button mt-7" onClick={handleStart}>
-          Type and Earn
+      {/* Breadcrumb Navigation Landmark */}
+      <nav aria-label="Breadcrumb" className="absolute top-4 left-4">
+        <button
+          onClick={() => router.push('/dashboard')}
+          aria-label="Back to Dashboard"
+          className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-3 py-1 rounded focus:outline-none focus:ring"
+        >
+          <ArrowLeft size={20} />
+          Back to Dashboard
         </button>
-      </div>
+      </nav>
 
-      <style jsx>{`
-        .page-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          width: 100vw;
-          min-height: 100vh;
-         background: linear-gradient(135deg, #ffe259 10%, #ffa751 100%);
-         
-
-          );
-        }
-        .content-wrapper {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          background:rgb(0 0 0 / 44%);
-          backdrop-filter: blur(8px);
-          padding: 2.5rem 2rem;
-          border-radius: 1.5rem;
-          
-            max-width: 430px;
-          width: 100%;        
-              height: 290px;
-          width: 85%;
-        }
-        
-        .start-button {
-          width: 80%;
-          background: linear-gradient(135deg, #1eec06f2 0%, #1eec06f2 100%);
-          color: #000000f2;  
-          font-size: 1.25rem;
-          font-weight: 600;
-          padding: 0.75rem 1.5rem;
-          border: none;
-          border-radius: 1rem;
-          cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        }
-     
-
-      `}</style>
-    </div>
+      {/* Main Content Landmark */}
+      <main role="main" className="flex items-center justify-center w-screen min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 p-4">
+        <div className="flex flex-col items-center bg-black/50 backdrop-blur-lg p-10 rounded-2xl max-w-xs w-11/12 h-[290px]">
+          {/* Typing Icon */}
+          <Image
+            src="/typing.svg"
+            alt="Typing Icon"
+            width={75}
+            height={75}
+            loading="lazy"                                 // Performance: defer load
+          />
+          {/* Start Button */}
+          <button
+            onClick={handleStart}
+            aria-label="Start typing challenge"
+            className="mt-7 w-4/5 bg-green-400 text-black text-xl font-semibold py-3 rounded-lg transform transition hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring"
+          >
+            Type and Earn
+          </button>
+        </div>
+      </main>
+    </>
   );
 }

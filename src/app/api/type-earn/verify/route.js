@@ -1,61 +1,123 @@
 // src/app/api/type-earn/verify/route.js
+
 import { NextResponse } from 'next/server';
 import { getAuth }     from '@clerk/nextjs/server';
+import mongoose        from 'mongoose';
+import LRU             from 'lru-cache';
+import { z }          from 'zod';
 import { connectToDatabase } from '@/lib/mongodb';
-import User            from '@/models/User';
-import TypeProgress    from '@/models/TypeProgress';
+
+// 📦 Rate‑Limiter (in‑memory LRU for single‑instance)
+//    Allows 1 request per user per minute
+const rateLimiter = new LRU({ max: 1000, ttl: 60 * 1000 });
+
+// 🍪 Memoize Mongoose Models
+const userSchema = new mongoose.Schema({
+  clerkId: { type: String, required: true, unique: true },
+  points:  { type: Number, default: 0 }
+});
+const typeProgressSchema = new mongoose.Schema({
+  clerkId:    String,
+  sessionId:  String,
+  setNumber:  Number,
+  points:     Number,
+  claimedAt:  { type: Date, default: Date.now }
+});
+
+const User = mongoose.models.User || mongoose.model('User', userSchema);
+const TypeProgress = mongoose.models.TypeProgress || mongoose.model('TypeProgress', typeProgressSchema);
+
+// 📝 Declarative Input Validation with Zod
+const VerifySchema = z.object({
+  sessionId: z.string().min(1, "sessionId is required"),
+  setNumber: z.number().int().nonnegative("setNumber must be a non-negative integer")
+});
+
+// 🎟️ Centralized Error Response
+function errorJSON(msg, status = 400) {
+  return NextResponse.json({ error: msg }, { status });
+}
 
 export async function GET() {
-  // A simple health check
+  // Simple health check
   return NextResponse.json({ status: 'OK', route: '/api/type-earn/verify' });
 }
 
 export async function POST(req) {
-  console.log('🟢 [type-earn/verify] POST hit');
+  // 1) Authentication
+  const { userId } = getAuth(req);
+  if (!userId) {
+    return errorJSON('Unauthenticated', 401);
+  }
+
+  // 2) Rate‑Limiting
+  const key = `type-earn:${userId}`;
+  if (rateLimiter.has(key)) {
+    return errorJSON('Too many requests – try again in a minute.', 429);
+  }
+  rateLimiter.set(key, true);
+
+  // 3) Parse & Validate Input
+  let payload;
   try {
-    const { userId } = getAuth(req);
-    if (!userId) {
-      console.warn('🔒 Unauthenticated request');
-      return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 });
+    payload = VerifySchema.parse(await req.json());
+  } catch (zErr) {
+    // zErr.errors is an array of validation issues
+    const first = zErr.errors[0];
+    return errorJSON(`Invalid payload: ${first.message}`, 400);
+  }
+  const { sessionId, setNumber } = payload;
+
+  // 4) Ensure DB Connection (cached)
+  await connectToDatabase();
+
+  // 5) Atomic Write: Use MongoDB Transaction
+  const session = await mongoose.startSession();
+  session.startTransaction();
+  try {
+    // 5a) Prevent duplicate claim
+    const duplicate = await TypeProgress.findOne({
+      clerkId:   userId,
+      sessionId,
+      setNumber
+    }).session(session);
+
+    if (duplicate) {
+      await session.abortTransaction();
+      session.endSession();
+      return errorJSON('Already claimed points for this set.', 400);
     }
 
-    const { sessionId, setNumber } = await req.json();
-    console.log('📥 Payload:', { sessionId, setNumber });
+    // 5b) Record the progress
+    const POINTS = 5;
+    await TypeProgress.create([{
+      clerkId:   userId,
+      sessionId,
+      setNumber,
+      points:    POINTS
+    }], { session });
 
-    if (!sessionId || typeof setNumber !== 'number') {
-      console.warn('⚠️ Invalid payload');
-      return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
-    }
+    // 5c) Update (or create) the User’s total points
+    const user = await User.findOneAndUpdate(
+      { clerkId: userId },
+      { $inc: { points: POINTS } },
+      { new: true, upsert: true, session }
+    );
 
-    await connectToDatabase();
-    console.log('🗄️ Connected to DB');
+    // Commit all writes together
+    await session.commitTransaction();
+    session.endSession();
 
-    const already = await TypeProgress.findOne({ clerkId: userId, sessionId, setNumber });
-    if (already) {
-      console.info('🚫 Duplicate claim');
-      return NextResponse.json(
-        { error: 'Already claimed points for this set.' },
-        { status: 400 }
-      );
-    }
-
-    const POINTS_PER_SET = 5;
-    await TypeProgress.create({ clerkId: userId, sessionId, setNumber, points: POINTS_PER_SET });
-    console.log('✅ Recorded TypeProgress');
-
-    let user = await User.findOne({ clerkId: userId });
-    if (!user) user = await User.create({ clerkId: userId, points: 0 });
-    user.points += POINTS_PER_SET;
-    await user.save();
-    console.log('💾 User points updated to', user.points);
-
+    // 6) Success Response
     return NextResponse.json({
-      message:     `${POINTS_PER_SET} points awarded!`,
+      message:     `${POINTS} points awarded!`,
       totalPoints: user.points
     });
-
   } catch (err) {
+    // Abort on any error
+    await session.abortTransaction();
+    session.endSession();
     console.error('🔥 Error in /api/type-earn/verify:', err);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return errorJSON('Internal server error', 500);
   }
 }

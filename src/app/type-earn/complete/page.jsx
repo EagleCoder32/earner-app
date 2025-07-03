@@ -48,37 +48,18 @@ export default function CompletePage() {
   }, [sp]);
 
   return (
-    <div className="container">
-      <h1>{loading ? 'Processing…' : message}</h1>
-      {/* Now the user must click this to start again */}
+    <div className="flex flex-col items-center justify-center h-screen bg-[#1b0432] text-white text-center p-8">
+      <h1 className="text-2xl font-semibold">
+        {loading ? 'Processing…' : message}
+      </h1>
       {!loading && (
-        <button onClick={() => router.replace('/type-earn')}>
+        <button
+          onClick={() => router.replace('/type-earn')}
+          className="mt-8 py-4 px-8 text-lg rounded-lg bg-pink-400 text-black font-medium hover:bg-pink-500 transition focus:outline-none focus:ring"
+        >
           Type Again
         </button>
       )}
-      <style jsx>{`
-        .container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          background: #1b0432;
-          color: #fff;
-          text-align: center;
-          padding: 2rem;
-        }
-        button {
-          margin-top: 2rem;
-          padding: 1rem 2rem;
-          font-size: 1.2rem;
-          border: none;
-          border-radius: 8px;
-          background: #ff7df0;
-          color: #000;
-          cursor: pointer;
-        }
-      `}</style>
     </div>
   );
 }
