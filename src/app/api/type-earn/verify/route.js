@@ -3,13 +3,15 @@
 import { NextResponse } from 'next/server';
 import { getAuth }     from '@clerk/nextjs/server';
 import mongoose        from 'mongoose';
-import LRU             from 'lru-cache';
-import { z }          from 'zod';
+import { LRUCache }    from 'lru-cache';             // ✅ Use named export
+import { z }           from 'zod';
 import { connectToDatabase } from '@/lib/mongodb';
 
-// 📦 Rate‑Limiter (in‑memory LRU for single‑instance)
-//    Allows 1 request per user per minute
-const rateLimiter = new LRU({ max: 1000, ttl: 60 * 1000 });
+// 🎛️ Rate‑Limiter: one request per user per minute
+const rateLimiter = new LRUCache({
+  max: 1000,             // maximum number of users tracked
+  ttl: 60 * 1000         // 1 minute in milliseconds
+});
 
 // 🍪 Memoize Mongoose Models
 const userSchema = new mongoose.Schema({
@@ -62,7 +64,6 @@ export async function POST(req) {
   try {
     payload = VerifySchema.parse(await req.json());
   } catch (zErr) {
-    // zErr.errors is an array of validation issues
     const first = zErr.errors[0];
     return errorJSON(`Invalid payload: ${first.message}`, 400);
   }
