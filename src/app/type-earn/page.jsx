@@ -1,8 +1,7 @@
-// src/app/type-earn/page.jsx
 'use client';
 
-import Head from 'next/head';                            // SEO: page metadata
-import React, { useEffect, useRef } from 'react';
+import Head from 'next/head';
+import React, { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { ArrowLeft } from 'lucide-react';
@@ -11,9 +10,9 @@ import { ArrowLeft } from 'lucide-react';
  * 🪄 Hook: Clears old session on mount if not returning from an earn flow
  */
 function useTypeEarnSession() {
-  const params = useRef(new URLSearchParams(window.location.search));
   useEffect(() => {
-    if (!params.current.get('earned')) {
+    const params = new URLSearchParams(window.location.search);
+    if (!params.get('earned')) {
       localStorage.removeItem('typeEarnSession');
     }
   }, []);
@@ -29,11 +28,10 @@ function useEarnedAlert() {
     let timeout;
     const earned = params.get('earned');
     if (earned) {
-      alert(`🎉 You got ${earned} points!`);                    // Popup celebration
-      console.log(`User earned ${earned} points`);            // Log to console
+      alert(`🎉 You got ${earned} points!`);
+      console.log(`User earned ${earned} points`);
       const prev = parseInt(localStorage.getItem('typeEarnPoints') || '0', 10);
-      localStorage.setItem('typeEarnPoints', prev + Number(earned)); // Store total
-      // Clean URL after 3s (throttled)
+      localStorage.setItem('typeEarnPoints', prev + Number(earned));
       timeout = setTimeout(() => {
         router.replace('/type-and-earn', { scroll: false });
       }, 3000);
@@ -51,15 +49,15 @@ export default function TypeAndEarnPage() {
    * 🏁 Starts a new typing session by generating a UUID and navigating
    */
   const handleStart = () => {
-    const sessionId = crypto.randomUUID();                    // Unique session token
-    localStorage.setItem('typeEarnSession', sessionId);       // Save for resume
+    // only runs in browser
+    const sessionId = crypto.randomUUID();
+    localStorage.setItem('typeEarnSession', sessionId);
     window.location.href =
-      `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`; // Navigate
+      `https://eagleearner.com/type-and-earn/?sessionId=${sessionId}`;
   };
 
   return (
     <>
-      {/* SEO Metadata */}
       <Head>
         <title>Type &amp; Earn – EagleEarner</title>
         <meta
@@ -68,7 +66,6 @@ export default function TypeAndEarnPage() {
         />
       </Head>
 
-      {/* Breadcrumb Navigation Landmark */}
       <nav aria-label="Breadcrumb" className="absolute top-4 left-4">
         <button
           onClick={() => router.push('/dashboard')}
@@ -80,18 +77,18 @@ export default function TypeAndEarnPage() {
         </button>
       </nav>
 
-      {/* Main Content Landmark */}
-      <main role="main" className="flex items-center justify-center w-screen min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 p-4">
+      <main
+        role="main"
+        className="flex items-center justify-center w-screen min-h-screen bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 p-4"
+      >
         <div className="flex flex-col items-center bg-black/50 backdrop-blur-lg p-10 rounded-2xl max-w-xs w-11/12 h-[290px]">
-          {/* Typing Icon */}
           <Image
             src="/typing.svg"
             alt="Typing Icon"
             width={75}
             height={75}
-            loading="lazy"                                 // Performance: defer load
+            loading="lazy"
           />
-          {/* Start Button */}
           <button
             onClick={handleStart}
             aria-label="Start typing challenge"
