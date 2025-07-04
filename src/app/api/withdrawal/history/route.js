@@ -1,32 +1,49 @@
+// src/app/api/withdrawal/history/route.js
 import { NextResponse }      from 'next/server';
 import { getAuth }           from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
-import WithdrawalRequest     from '@/models/WithdrawalRequest';
+import { errorJSON }         from '@/lib/apiResponses';              // 1️⃣ Centralized errors
+import WithdrawalRequest     from '@/models/WithdrawalRequest';       // 2️⃣ Memoized model
 
 export async function GET(req) {
   try {
-    // 1) Authenticate the user
+    // ——— 1) Authenticate —————————————
     const { userId } = getAuth(req);
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthenticated' }, { status: 401 });
+      return errorJSON('Unauthenticated', 401);
     }
 
-    // 2) Connect to MongoDB
+    // ——— 2) Pagination parameters ——————
+    // default to page=1, limit=20
+    const url    = req.nextUrl;
+    const page   = Math.max(1, parseInt(url.searchParams.get('page')  || '1',  10));
+    const limit  = Math.max(1, parseInt(url.searchParams.get('limit') || '20', 10));
+    const skip   = (page - 1) * limit;
+
+    // ——— 3) Connect to DB ——————————
     await connectToDatabase();
 
-    // 3) Fetch this user’s withdrawal requests, most recent first
+    // ——— 4) Count total records ——————
+    const total = await WithdrawalRequest.countDocuments({ clerkId: userId });
+
+    // ——— 5) Fetch paginated, projected records ————
     const records = await WithdrawalRequest
       .find({ clerkId: userId })
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 })                       // most recent first
+      .skip(skip)                                     // pagination offset
+      .limit(limit)                                   // page size
+      .select('option tierLabel country status createdAt') // 3️⃣ Project only used fields
       .lean();
 
-    // 4) Return the array of records
-    return NextResponse.json({ records });
+    // ——— 6) Return structured response ——————
+    return NextResponse.json({
+      total,                                          // total available records
+      page,                                           // current page
+      limit,                                          // items per page
+      records,                                        // this page’s slice
+    });
   } catch (err) {
     console.error('🔥 Error in /api/withdrawal/history:', err);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    return errorJSON('Internal server error', 500);
   }
 }
