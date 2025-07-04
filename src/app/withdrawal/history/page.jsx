@@ -4,7 +4,6 @@
 
 import Head from 'next/head';                            // 📌 SEO: Metadata
 import { useEffect, useState, useMemo, useCallback } from 'react';
-import Link from 'next/link';
 import { apiGet } from '@/lib/api';                      // 📌 Code cleanup: consolidated fetch
 
 export default function HistoryPage() {
