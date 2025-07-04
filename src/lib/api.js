@@ -12,14 +12,34 @@
 export async function apiPost(path, body) {
   const res = await fetch(path, {
     method:      'POST',
-    credentials: 'same-origin',           // include cookies/session
+    credentials: 'same-origin',
     headers:     { 'Content-Type': 'application/json' },
     body:        JSON.stringify(body),
   });
 
   const data = await res.json();
   if (!res.ok) {
-    // throw with the error message from the API (or a generic fallback)
+    throw new Error(data.error || 'Unknown error occurred');
+  }
+  return data;
+}
+
+/**
+ * apiGet
+ * A thin wrapper around fetch for GET requests,
+ * centralizing credentials, error parsing, and JSON parsing.
+ *
+ * @param {string} path   — the URL path to GET (e.g. '/api/withdrawal/history')
+ * @returns {Promise<any>} — resolves with parsed JSON on 2xx, rejects with Error on non‑2xx
+ */
+export async function apiGet(path) {
+  const res = await fetch(path, {
+    method:      'GET',
+    credentials: 'same-origin',
+  });
+
+  const data = await res.json();
+  if (!res.ok) {
     throw new Error(data.error || 'Unknown error occurred');
   }
   return data;
