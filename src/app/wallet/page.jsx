@@ -11,7 +11,7 @@ export default async function WalletPage() {
   // 1) Authenticate via Clerk on the server
   const { userId } = getAuth({ headers: headers(), cookies: cookies() });
   if (!userId) {
-    return redirect('/sign-in');
+    return redirect('/');
   }
 
   // 2) Render the shell immediately; WalletClient will fetch points
