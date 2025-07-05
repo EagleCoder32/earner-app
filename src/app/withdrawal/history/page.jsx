@@ -77,7 +77,7 @@ export default function HistoryPage() {
 
   // 📌 Handlers wrapped in useCallback
   const goBack = useCallback(() => {
-    window.location.href = '/withdrawal';
+    window.location.href = '/dashboard';
   }, []);
 
   const prevPage = useCallback(() => {
