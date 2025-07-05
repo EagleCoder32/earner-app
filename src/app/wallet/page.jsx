@@ -4,30 +4,17 @@ import Head from 'next/head';                           // 📌 SEO: Add Head fo
 import { redirect } from 'next/navigation';
 import { getAuth } from '@clerk/nextjs/server';
 import { headers, cookies } from 'next/headers';
-import { connectToDatabase } from '@/lib/mongodb';
-import User from '@/models/User';
 import Link from 'next/link';
+import WalletClient from '@/components/WalletClient';    // 📌 Client‑side fetch
 
 export default async function WalletPage() {
-  // 1) Read headers & cookies for server‑side auth
-  const reqHeaders = headers();
-  const reqCookies = cookies();
-
-  // 2) Authenticate via Clerk
-  const { userId } = getAuth({ headers: reqHeaders, cookies: reqCookies });
+  // 1) Authenticate via Clerk on the server
+  const { userId } = getAuth({ headers: headers(), cookies: cookies() });
   if (!userId) {
     return redirect('/sign-in');
   }
 
-  // 3) Connect to DB (uses cached connection under the hood)
-  await connectToDatabase();
-
-  // 4) Lean, projected query for performance: only fetch 'points'
-  const userDoc = await User.findOne({ clerkId: userId })
-    .select('points')
-    .lean();
-  const points = userDoc?.points ?? 0;
-
+  // 2) Render the shell immediately; WalletClient will fetch points
   return (
     <>
       {/* 📌 SEO Metadata */}
@@ -39,11 +26,9 @@ export default async function WalletPage() {
         />
       </Head>
 
-      {/* 📌 Semantic main landmark & hidden heading for accessibility */}
-      <main role="main" className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-        <h1 className="sr-only">Your Wallet</h1>
-
-        {/* 📌 Transaction History link with ARIA */}
+      {/* 📌 Main content */}
+      <main className="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+        {/* Transaction History Link */}
         <div className="absolute top-4 right-4">
           <Link
             href="/withdrawal/history"
@@ -54,14 +39,10 @@ export default async function WalletPage() {
           </Link>
         </div>
 
-        {/* 📌 Balance Display */}
-        <div className="flex items-center space-x-3">
-          <span className="text-5xl">🪙</span>
-          <span className="text-5xl font-bold">{points.toLocaleString()}</span>
-        </div>
-        <p className="mt-2 text-gray-600">Available Balance</p>
+        {/* Wallet Balance (client‑fetched) */}
+        <WalletClient />
 
-        {/* 📌 Redeem Button with ARIA */}
+        {/* Redeem Button */}
         <Link href="/withdrawal">
           <button
             aria-label="Redeem your points"
