@@ -1,3 +1,4 @@
+// src/components/WalletClient.jsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -22,22 +23,21 @@ export default function WalletClient() {
     fetchPoints();
   }, []);
 
-  // Loading state
+  // 📌 LOADING STATE: show a message instead of a gray block
   if (points === null) {
     return (
-      <div className="flex items-center space-x-3">
-        <span className="text-5xl animate-pulse">🪙</span>
-        <div className="h-12 w-32 bg-gray-200 animate-pulse rounded" />
+      <div className="flex flex-col items-center space-y-2">
+        <span className="text-xl italic text-gray-600">Loading your balance...</span>
       </div>
     );
   }
 
-  // Error state
+  // 📌 ERROR STATE
   if (error) {
     return <p className="text-red-600">{error}</p>;
   }
 
-  // Loaded state
+  // 📌 LOADED STATE
   return (
     <div className="flex items-center space-x-3">
       <span className="text-5xl">🪙</span>
