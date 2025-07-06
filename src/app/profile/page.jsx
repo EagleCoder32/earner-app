@@ -1,61 +1,112 @@
-"use client";
+// src/app/profile/page.jsx
+'use client';
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { useUser, SignOutButton } from '@clerk/nextjs';   // ← 1️⃣ import SignOutButton
+import { apiGet } from '@/lib/api';
 
 export default function ProfilePage() {
-  const [user, setUser] = useState(null);
+  const { isLoaded, user, isSignedIn } = useUser();
+  const [points, setPoints] = useState(null);
+  const [error, setError]   = useState(null);
 
-  // In a real app you'd fetch this from your auth context or an API
   useEffect(() => {
-    // Mock fetch
-    setTimeout(() => {
-      setUser({
-        name: "Jane Doe",
-        email: "jane.doe@example.com",
-        points: 23450,
-        joined: "2024-01-15",
-      });
-    }, 300);
-  }, []);
+    if (!isLoaded || !isSignedIn) return;
 
-  if (!user) {
+    apiGet('/api/wallet/points')
+      .then((data) => setPoints(data.points))
+      .catch((err) => {
+        console.error('Error fetching points:', err);
+        setError('Could not load points');
+        setPoints(0);
+      });
+  }, [isLoaded, isSignedIn]);
+
+  if (!isLoaded) {
     return (
       <div className="max-w-md mx-auto p-6 text-center">
-        <p className="text-gray-500">Loading your profile…</p>
+        <p className="text-gray-500">Loading profile…</p>
+      </div>
+    );
+  }
+
+  if (!isSignedIn) {
+    return (
+      <div className="max-w-md mx-auto p-6 text-center">
+        <p className="text-gray-500">You must be signed in to view your profile.</p>
+        <Link href="/" className="text-blue-500 hover:underline">
+          ← Back to Home
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-6 font-sans">
+    <div className="max-w-md mx-auto px-4 py-6 font-sans space-y-6">
       {/* Back to Dashboard */}
-      <div className="mb-6">
+      <div>
         <Link href="/dashboard" className="text-blue-500 hover:underline">
           ← Back to Dashboard
         </Link>
       </div>
 
       {/* Profile Card */}
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6">
-        <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
-        <div className="space-y-3">
+      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 space-y-4">
+        <h1 className="text-2xl font-bold">Your Profile</h1>
+
+        <div className="space-y-2">
           <div>
-            <span className="font-medium">Name: </span>
-            <span>{user.name}</span>
+            <span className="font-medium">Name:&nbsp;</span>
+            <span>{user.fullName || user.firstName}</span>
           </div>
           <div>
-            <span className="font-medium">Email: </span>
-            <span>{user.email}</span>
+            <span className="font-medium">Email:&nbsp;</span>
+            <span>{user.primaryEmailAddress?.emailAddress}</span>
           </div>
           <div>
-            <span className="font-medium">Points Balance: </span>
-            <span>{user.points.toLocaleString()}</span>
+            <span className="font-medium">Member Since:&nbsp;</span>
+            <span>
+              {new Date(user.createdAt).toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </span>
           </div>
           <div>
-            <span className="font-medium">Member Since: </span>
-            <span>{new Date(user.joined).toLocaleDateString()}</span>
+            <span className="font-medium">Points Balance:&nbsp;</span>
+            {points === null ? (
+              <em className="text-gray-500">Loading points…</em>
+            ) : error ? (
+              <span className="text-red-600">{error}</span>
+            ) : (
+              <span>{points.toLocaleString()}</span>
+            )}
           </div>
+        </div>
+
+        {/* 📌 2️⃣ Support & Logout buttons */}
+        <div className="flex justify-between mt-6">
+          {/* Support Link */}
+          <Link href="/support">
+            <button
+              aria-label="Contact support"
+              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition"
+            >
+              Support
+            </button>
+          </Link>
+
+          {/* Logout Button via Clerk */}
+          <SignOutButton>
+            <button
+              aria-label="Log out"
+              className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+            >
+              Logout
+            </button>
+          </SignOutButton>
         </div>
       </div>
     </div>
