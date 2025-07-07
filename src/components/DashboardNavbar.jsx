@@ -10,6 +10,7 @@ const navItems = [
   { href: '/', label: 'Dashboard' },
   { href: '/withdrawal', label: 'Withdraw' },
   { href: '/wallet', label: 'Wallet' },
+  { href: '/profile', label: 'Profile' },
 ];
 
 export default function DashboardNavbar() {
