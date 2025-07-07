@@ -4,24 +4,11 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUser, SignOutButton } from '@clerk/nextjs';   // ← 1️⃣ import SignOutButton
-import { apiGet } from '@/lib/api';
 
 export default function ProfilePage() {
   const { isLoaded, user, isSignedIn } = useUser();
-  const [points, setPoints] = useState(null);
-  const [error, setError]   = useState(null);
 
-  useEffect(() => {
-    if (!isLoaded || !isSignedIn) return;
 
-    apiGet('/api/wallet/points')
-      .then((data) => setPoints(data.points))
-      .catch((err) => {
-        console.error('Error fetching points:', err);
-        setError('Could not load points');
-        setPoints(0);
-      });
-  }, [isLoaded, isSignedIn]);
 
   if (!isLoaded) {
     return (
@@ -74,16 +61,8 @@ export default function ProfilePage() {
               })}
             </span>
           </div>
-          <div>
-            <span className="font-medium">Points Balance:&nbsp;</span>
-            {points === null ? (
-              <em className="text-gray-500">Loading points…</em>
-            ) : error ? (
-              <span className="text-red-600">{error}</span>
-            ) : (
-              <span>{points.toLocaleString()}</span>
-            )}
-          </div>
+
+
         </div>
 
         {/* 📌 2️⃣ Support & Logout buttons */}
