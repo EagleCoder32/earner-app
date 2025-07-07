@@ -85,14 +85,14 @@ export default function TypeAndEarnPage() {
           <Image
             src="/typing.svg"
             alt="Typing Icon"
-            width={75}
-            height={75}
+            width={95}
+            height={95}
             loading="lazy"
           />
           <button
             onClick={handleStart}
             aria-label="Start typing challenge"
-            className="mt-14 w-4/5 bg-green-400 text-black text-xl font-semibold py-3 rounded-lg transform transition hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring"
+            className="mt-12 w-4/5 bg-green-400 text-black text-xl font-semibold py-3 rounded-lg transform transition hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring"
           >
             Type and Earn
           </button>
