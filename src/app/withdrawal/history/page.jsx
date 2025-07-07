@@ -4,6 +4,8 @@
 
 import Head from 'next/head';                            // 📌 SEO: Metadata
 import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useRouter } from 'next/navigation';    // ← import router
+
 import { apiGet } from '@/lib/api';                      // 📌 Code cleanup: consolidated fetch
 
 export default function HistoryPage() {
@@ -75,10 +77,12 @@ export default function HistoryPage() {
     ));
   }, [paginatedRecords]);
 
-  // 📌 Handlers wrapped in useCallback
-  const goBack = useCallback(() => {
-    window.location.href = '/dashboard';
-  }, []);
+
+  // 📌 Use Next.js client router to navigate without reload
+  const router = useRouter();
+   const goBack = useCallback(() => {
+    router.push('/dashboard');
+  }, [router]);
 
   const prevPage = useCallback(() => {
     setPage((p) => Math.max(1, p - 1));
@@ -106,7 +110,7 @@ export default function HistoryPage() {
           <button
             onClick={goBack}
             className="p-2 hover:bg-gray-200 rounded transition inline-flex"
-            aria-label="Back to Withdrawal"
+            aria-label="Back to Dashboard"
           >
             ← Back
           </button>
