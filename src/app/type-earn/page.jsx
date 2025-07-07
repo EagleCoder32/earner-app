@@ -70,7 +70,7 @@ export default function TypeAndEarnPage() {
         <button
           onClick={() => router.push('/dashboard')}
           aria-label="Back to Dashboard"
-          className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-3 py-1 rounded focus:outline-none focus:ring"
+          className="flex items-center gap-2 bg-gray-800 hover:bg-white/30 text-white font-semibold px-3 py-1 rounded focus:outline-none focus:ring"
         >
           <ArrowLeft size={20} />
           Back to Dashboard
