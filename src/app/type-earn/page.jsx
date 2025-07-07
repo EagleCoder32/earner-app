@@ -92,7 +92,7 @@ export default function TypeAndEarnPage() {
           <button
             onClick={handleStart}
             aria-label="Start typing challenge"
-            className="mt-7 w-4/5 bg-green-400 text-black text-xl font-semibold py-3 rounded-lg transform transition hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring"
+            className="mt-14 w-4/5 bg-green-400 text-black text-xl font-semibold py-3 rounded-lg transform transition hover:-translate-y-1 hover:shadow-lg focus:outline-none focus:ring"
           >
             Type and Earn
           </button>
