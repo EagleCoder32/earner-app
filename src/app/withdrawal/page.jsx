@@ -1,8 +1,5 @@
-// src/app/withdrawal/page.jsx
-
-
 'use client';
-
+// src/app/withdrawal/page.jsx
 
 import Head from 'next/head';                          // SEO metadata
 import { useState, useEffect, useMemo } from 'react';

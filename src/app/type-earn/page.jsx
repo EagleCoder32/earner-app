@@ -1,7 +1,5 @@
-// src/app/type-earn/page.jsx
-
 'use client';
-
+// src/app/type-earn/page.jsx
 
 import Head from 'next/head';
 import React, { useEffect } from 'react';

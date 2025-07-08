@@ -1,7 +1,5 @@
-// src/app/withdrawal/[option]/page.jsx
 'use client';
-
-
+// src/app/withdrawal/[option]/page.jsx
 
 import Head from 'next/head';
 import { useState, useEffect, useMemo, useCallback } from 'react';
