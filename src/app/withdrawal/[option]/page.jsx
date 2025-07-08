@@ -1,7 +1,7 @@
 // src/app/withdrawal/[option]/page.jsx
+export const runtime = 'edge';         // ← add this!
 'use client';
 
-export const runtime = 'edge';         // ← add this!
 
 
 import Head from 'next/head';

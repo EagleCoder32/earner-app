@@ -1,8 +1,8 @@
 // src/app/wallet/page.jsx
+export const runtime = 'edge';         // ← add this!
 
 import Head from 'next/head';
 
-export const runtime = 'edge';         // ← add this!
 
 
 // 📌 SEO: Add Head for metadata

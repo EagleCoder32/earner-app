@@ -1,7 +1,6 @@
 // src/app/admin/withdrawals/page.jsx
-'use client';
-
 export const runtime = 'edge';         // ← add this!
+'use client';
 
 
 import { useEffect, useState } from 'react';

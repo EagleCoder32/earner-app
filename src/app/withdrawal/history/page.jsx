@@ -1,5 +1,7 @@
 // src/app/withdrawal/history/page.jsx
 
+export const runtime = 'edge'; 
+
 'use client';
 
 import Head from 'next/head';                            // 📌 SEO: Metadata
