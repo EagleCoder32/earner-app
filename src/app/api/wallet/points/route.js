@@ -1,5 +1,4 @@
 // src/app/api/wallet/points/route.js
-export const runtime = 'edge';         // ← add this!
 
 
 import { NextResponse } from 'next/server';
