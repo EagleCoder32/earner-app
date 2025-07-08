@@ -1,8 +1,6 @@
 // src/app/type-earn/page.jsx
 
-
 'use client';
-export const runtime = 'edge'; 
 
 
 import Head from 'next/head';
