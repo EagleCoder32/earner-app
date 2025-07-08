@@ -1,6 +1,11 @@
 // src/app/wallet/page.jsx
 
-import Head from 'next/head';                           // 📌 SEO: Add Head for metadata
+import Head from 'next/head';
+
+export const runtime = 'edge';         // ← add this!
+
+
+// 📌 SEO: Add Head for metadata
 import { redirect } from 'next/navigation';
 import { getAuth } from '@clerk/nextjs/server';
 import { headers, cookies } from 'next/headers';

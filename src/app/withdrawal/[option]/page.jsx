@@ -1,6 +1,9 @@
 // src/app/withdrawal/[option]/page.jsx
 'use client';
 
+export const runtime = 'edge';         // ← add this!
+
+
 import Head from 'next/head';
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';

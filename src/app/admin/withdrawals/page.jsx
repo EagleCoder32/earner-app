@@ -1,6 +1,9 @@
 // src/app/admin/withdrawals/page.jsx
 'use client';
 
+export const runtime = 'edge';         // ← add this!
+
+
 import { useEffect, useState } from 'react';
 import { useRouter }          from 'next/navigation';
 import { useUser }            from '@clerk/nextjs';

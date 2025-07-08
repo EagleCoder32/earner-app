@@ -1,4 +1,7 @@
 // src/app/api/read-earn/verify/route.js
+
+export const runtime = 'edge';         // ← add this!
+
 import { NextResponse } from 'next/server';
 import { getAuth } from '@clerk/nextjs/server';
 import { connectToDatabase } from '@/lib/mongodb';
