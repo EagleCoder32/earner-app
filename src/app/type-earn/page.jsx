@@ -1,3 +1,6 @@
+// src/app/type-earn/page.jsx
+
+
 export const runtime = 'edge'; 
 
 'use client';

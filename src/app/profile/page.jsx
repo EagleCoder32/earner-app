@@ -1,7 +1,6 @@
 // src/app/profile/page.jsx
 'use client';
 
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useUser, SignOutButton } from '@clerk/nextjs';   // ← 1️⃣ import SignOutButton
 
