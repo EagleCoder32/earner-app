@@ -1,9 +1,9 @@
 // src/app/type-earn/page.jsx
 
 
+'use client';
 export const runtime = 'edge'; 
 
-'use client';
 
 import Head from 'next/head';
 import React, { useEffect } from 'react';

@@ -1,9 +1,9 @@
 // src/app/withdrawal/page.jsx
 
 
+'use client';
 export const runtime = 'edge'; 
 
-'use client';
 
 import Head from 'next/head';                          // SEO metadata
 import { useState, useEffect, useMemo } from 'react';
