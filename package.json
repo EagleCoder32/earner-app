@@ -20,7 +20,6 @@
     "zod": "^3.25.71"
   },
   "devDependencies": {
-    "@cloudflare/next-on-pages": "^1.13.12",
     "eslint": "^9",
     "eslint-config-next": "15.1.8",
     "postcss": "^8",
