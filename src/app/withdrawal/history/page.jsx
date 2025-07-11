@@ -1,5 +1,6 @@
-'use client';
 // src/app/withdrawal/history/page.jsx
+
+'use client';
 
 import Head from 'next/head';                            // 📌 SEO: Metadata
 import { useEffect, useState, useMemo, useCallback } from 'react';
