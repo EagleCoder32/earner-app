@@ -1,0 +1,11 @@
+[build]
+  # The build command for Next.js
+  command   = "npm run build"
+  # Let the Next.js plugin handle routing and publishing
+  publish   = ".next"
+  # Location for any Netlify Functions (SSR lambdas)
+  functions = ".netlify/functions"
+
+[[plugins]]
+  # Use the official Netlify Next.js plugin
+  package = "@netlify/plugin-nextjs"
