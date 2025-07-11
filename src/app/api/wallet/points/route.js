@@ -1,5 +1,4 @@
 // src/app/api/wallet/points/route.js
-export const runtime = 'edge';
 
 import { NextResponse } from 'next/server';
 import { getAuth }      from '@clerk/nextjs/server';
