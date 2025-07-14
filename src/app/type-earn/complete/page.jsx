@@ -1,51 +1,50 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 
 export default function CompletePage() {
-  const [message, setMessage] = useState('Checking…');
-  const [loading, setLoading] = useState(true);
-  const sp     = useSearchParams();
-  const router = useRouter();
+  const [message, setMessage] = useState('Checking…')
+  const [loading, setLoading] = useState(true)
+  const sp     = useSearchParams()
+  const router = useRouter()
 
   useEffect(() => {
-    // 1) Grab sessionId (prefer URL, fallback to localStorage)
-    const sidFromUrl = sp.get('sessionId');
-    const sessionId  = sidFromUrl || localStorage.getItem('typeEarnSession') || '';
+    // 1) Grab sessionId (URL wins, then fallback to localStorage)
+    const sidFromUrl = sp.get('sessionId')
+    const sessionId  = sidFromUrl || localStorage.getItem('typeEarnSession')
     // 2) Grab the set number
-    const setNum     = parseInt(sp.get('set') || '', 10);
+    const setNum     = parseInt(sp.get('set') || '', 10)
 
     if (!sessionId || isNaN(setNum)) {
-      setMessage('❌ Invalid session or set.');
-      setLoading(false);
-      return;
+      // redirect them back to start if something is off
+      router.replace('/type-earn')
+      return
     }
 
     // 3) Call our backend to award points
     fetch('/api/type-earn/verify', {
       method:      'POST',
-      credentials: 'same-origin',
+      credentials: 'include',              // ensure cookies are sent
       headers:     { 'Content-Type': 'application/json' },
       body:        JSON.stringify({ sessionId, setNumber: setNum })
     })
     .then(async res => {
-      const data = await res.json();
+      const data = await res.json()
       if (res.ok) {
-        // Award successful → clear stored ID so they can start a fresh chain next time
-        localStorage.removeItem('typeEarnSession');
-        setMessage(`🎉 You got 5 points! Total: ${data.totalPoints}.`);
+        localStorage.removeItem('typeEarnSession')
+        setMessage(`🎉 You got 5 points! Total: ${data.totalPoints}.`)
       } else {
-        setMessage(`❌ ${data.error}`);
+        setMessage(`❌ ${data.error}`)
       }
     })
     .catch(() => {
-      setMessage('❌ Network error.');
+      setMessage('❌ Network error.')
     })
     .finally(() => {
-      setLoading(false);
-    });
-  }, [sp]);
+      setLoading(false)
+    })
+  }, [sp, router])
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-[#1b0432] text-white text-center p-8">
@@ -61,5 +60,5 @@ export default function CompletePage() {
         </button>
       )}
     </div>
-  );
+  )
 }

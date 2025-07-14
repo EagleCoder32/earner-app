@@ -1,6 +1,5 @@
 // src/app/api/type-earn/verify/route.js
 import { NextResponse }              from 'next/server';
-import { NextRequest }  from 'next/server'      // <— add this
 import { getAuth }                   from '@clerk/nextjs/server';
 import mongoose                      from 'mongoose';
 import { LRUCache }                  from 'lru-cache';
