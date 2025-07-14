@@ -33,7 +33,7 @@ export default function CompletePage() {
       const data = await res.json()
       if (res.ok) {
         localStorage.removeItem('typeEarnSession')
-        setMessage(`🎉 You got 5 points! Total: ${data.totalPoints}.`)
+        setMessage(`🎉 You got 10 points! Total: ${data.totalPoints}.`)
       } else {
         setMessage(`❌ ${data.error}`)
       }

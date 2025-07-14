@@ -109,7 +109,7 @@ export async function POST(req) {
       }
 
       // — Record Progress —
-      const POINTS = 5;
+      const POINTS = 10;  // now 10 points per set
       await TypeProgress.create(
         [{ clerkId: userId, sessionId, setNumber, points: POINTS }],
         { session: dbSession }
@@ -122,7 +122,7 @@ export async function POST(req) {
         { new: true, upsert: true, session: dbSession }
       );
 
-      // — Commit →
+      // — Commit —
       await dbSession.commitTransaction();
 
       console.log('✅ Points awarded, user total:', user.points);
