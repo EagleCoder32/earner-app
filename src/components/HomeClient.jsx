@@ -71,7 +71,7 @@ export default function HomeClient() {
                        title: "Cash",
                        items: [
                          { src: "/paypal.svg", caption: "PayPal" },
-                         { src: "/upi-pay.svg", caption: "UPI" },
+                         { src: "/upi-cash.svg", caption: "UPI" },
                          { src: "/gcash.webp", caption: "GCash" },
                        ],
                      },
